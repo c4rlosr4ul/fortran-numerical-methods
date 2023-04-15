@@ -1,9 +1,13 @@
 program MBs
 use biseccion
 use falsa 
+
 implicit none 
+
 integer iteraciones,i
 real*4:: xi,xf,xc,error,xcet,err
+
+
 character:: r
 write(*,*)'Sea x^4+3x^3-2, se calculara la raiz de este polinomio'
 write (*,*)"Ingrese el intervalo de que contenga una raiz"
