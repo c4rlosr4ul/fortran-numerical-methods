@@ -27,7 +27,6 @@ if(r=='N'.or.r=="n") then
     write(*,*)"Es",xn0,"."
 else if (r=='S'.or.r=="s") then
     write(*,*)"Sea 0=(1.4e-5)x**(1.5) + (1.15e-5)x**(2) - (2*9.81)/1000 "
-    write(*,*)"Ingrese el primer valor para la aproximacion de la raiz"
     read(*,*)xn0
     write(*,*)"Ingrese el segundo valor para la aproximacion de la raiz"
     read(*,*)xn1
