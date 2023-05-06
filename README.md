@@ -27,17 +27,13 @@ To compile and run the example main programs, follow these steps:
     
 2.  Compile the main program of your choice using `gfortran`. For example, to compile `main_edo.f90`, run:
     
-    bashCopy code
-    
-    `gfortran modules/solucion_edo.f90 main_edo.f90 -o main_edo.out` 
-    
+```bash
+    gfortran modules/solucion_edo.f90 main_edo.f90 -o main_edo.out 
+```
 3.  Execute the compiled program. For example, to run `main_edo.out`, run:
-    
-    bashCopy code
-    
+```bash
     `./main_edo.out` 
-    
-
+```
 ## Contributions
 
 Contributions are welcome. Please create a branch from your fork and submit a pull request with your changes.
