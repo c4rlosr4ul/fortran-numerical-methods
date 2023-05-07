@@ -8,9 +8,15 @@ use intengracion_numerica
     xi = 0.0d0
     xf = 3.0d0
     n = 100000
-    
+
+    write(*, *) "La integracion de f desde xi hasta xf con"
     call m_trapecio(f, xi, xf, n, rsl)
-    write(*, *) "La integracion de f desde xi hasta xf es", rsl
+    write(*, *) "Metedo del trapecio: ", rsl
+
+    call m_simpson_un_tercio(f, xi, xf, n, rsl)
+    write(*, *) "Metedo de simpson 1/3: ", rsl
+
+
 
 contains
     function f(x)
