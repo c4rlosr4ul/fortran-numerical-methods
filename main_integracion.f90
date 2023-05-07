@@ -16,7 +16,8 @@ use intengracion_numerica
     call m_simpson_un_tercio(f, xi, xf, n, rsl)
     write(*, *) "Metedo de simpson 1/3: ", rsl
 
-
+    call m_simpson_tres_octavos(f, xi, xf, n, rsl)
+    write(*, *) "Metedo de simpson 3/8: ", rsl
 
 contains
     function f(x)

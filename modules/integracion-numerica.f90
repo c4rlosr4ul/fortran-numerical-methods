@@ -1,7 +1,7 @@
 module intengracion_numerica
 implicit none
     PRIVATE
-    PUBLIC :: m_trapecio, m_simpson_un_tercio
+    PUBLIC :: m_trapecio, m_simpson_un_tercio, m_simpson_tres_octavos
 contains
     subroutine m_trapecio(f, xi, xf, n, rsl)
 
@@ -52,5 +52,32 @@ contains
 
     end subroutine m_simpson_un_tercio
 
+    subroutine m_simpson_tres_octavos(f, xi, xf, n, rsl)
+        interface
+            real(8) function f(x)
+                real(8), intent(in) :: x
+            end function f
+        end interface
+
+        real(8), intent(in) :: xi, xf
+        integer, intent(in) :: n
+        real(8), intent(out) :: rsl
+        real(8) :: x, h
+        integer :: i
+
+        h = abs(xf - xi) / n
+        x = xi
+        rsl = 0.0d0
+
+        do i = 1, n - 1
+            if (mod(i, 3) == 0) then
+                rsl = rsl + 2.0d0 * f(x + i * h)
+            else
+                rsl = rsl + 3.0d0 * f(x + i * h)
+            end if
+        end do
+        rsl = 0.3750d0 * h  * (f(xi) + f(xf) + rsl)
+
+    end subroutine m_simpson_tres_octavos
 
 end module intengracion_numerica
