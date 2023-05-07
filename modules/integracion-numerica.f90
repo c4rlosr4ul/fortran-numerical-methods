@@ -1,7 +1,7 @@
 module intengracion_numerica
 implicit none
     PRIVATE
-    PUBLIC :: m_trapecio, m_simpson_un_tercio, m_simpson_tres_octavos
+    PUBLIC :: m_trapecio, m_simpson_un_tercio, m_simpson_tres_octavos, m_romberg
 contains
     subroutine m_trapecio(f, xi, xf, n, rsl)
 
@@ -79,5 +79,40 @@ contains
         rsl = 0.3750d0 * h  * (f(xi) + f(xf) + rsl)
 
     end subroutine m_simpson_tres_octavos
+    
+    subroutine m_romberg(f, xi, xf, n, rsl)
+    interface
+            real(8) function f(x)
+                real(8), intent(in) :: x
+            end function f
+        end interface
 
+        real(8), intent(in) :: xi, xf
+        integer, intent(in) :: n
+        real(8), intent(out) :: rsl
+        real(8), allocatable :: R(:, :)
+        real(8) :: x, h, sum
+        integer :: i, j, k, m
+
+        allocate(R(n, n))
+        
+        R(1,1) = (xf - xi) * 0.5 * (f(xi) + f(xf))
+      
+          do i = 2, n 
+            sum = 0
+            do j = 1, (2**(i-2)), 1
+              sum = sum + f(xi + ((xf - xi) / 2**(i-2)) * (j - 0.5))
+            end do
+            R(i,1) = 0.5 * (R(i-1,1) + ((xf - xi) / (2**(i-2))) * sum)
+          end do
+          
+          do k = 2, n
+            do m = k, n
+              R(m,k) = ((4**(k-1)) * R(m,k-1) - R(m-1,k-1)) / (4**(k-1) - 1)
+            end do
+          end do
+        rsl =  R(n,n)
+
+    end subroutine m_romberg
+    
 end module intengracion_numerica

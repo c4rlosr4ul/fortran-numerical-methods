@@ -19,6 +19,12 @@ use intengracion_numerica
     call m_simpson_tres_octavos(f, xi, xf, n, rsl)
     write(*, *) "Metedo de simpson 3/8: ", rsl
 
+    n = 10
+
+    call m_romberg(f, xi, xf, n, rsl)
+    write(*, *) "Metedo de Romberg: ", rsl
+
+
 contains
     function f(x)
         real(8), intent(in) :: x
