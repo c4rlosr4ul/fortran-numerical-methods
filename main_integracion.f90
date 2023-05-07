@@ -6,7 +6,7 @@ use intengracion_numerica
     integer :: n
     
     xi = 0.0d0
-    xf = 3.0d0
+    xf = 1.0d0
     n = 100000
 
     write(*, *) "La integracion de f desde xi hasta xf con"
@@ -19,17 +19,17 @@ use intengracion_numerica
     call m_simpson_tres_octavos(f, xi, xf, n, rsl)
     write(*, *) "Metedo de simpson 3/8: ", rsl
 
-    n = 10
+    n = 15
 
     call m_romberg(f, xi, xf, n, rsl)
     write(*, *) "Metedo de Romberg: ", rsl
-
+    ! The best
 
 contains
     function f(x)
         real(8), intent(in) :: x
         real(8) :: f
-            f = x ** 2
+            f = exp(-1 * x ** 2)
     end function
 
 end program main_integracion
