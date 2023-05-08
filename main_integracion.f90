@@ -11,13 +11,13 @@ use intengracion_numerica
 
     write(*, *) "La integracion de f desde xi hasta xf con"
     call m_trapecio(f, xi, xf, n, rsl)
-    write(*, *) "Metedo del trapecio: ", rsl
+    write(*, *) "Metodo del trapecio: ", rsl
 
     call m_simpson_un_tercio(f, xi, xf, n, rsl)
-    write(*, *) "Metedo de simpson 1/3: ", rsl
+    write(*, *) "Metodo de simpson 1/3: ", rsl
 
     call m_simpson_tres_octavos(f, xi, xf, n, rsl)
-    write(*, *) "Metedo de simpson 3/8: ", rsl
+    write(*, *) "Metodo de simpson 3/8: ", rsl
 
     n = 15
 
