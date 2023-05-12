@@ -1,9 +1,10 @@
 module solucion_edo
     implicit none
     private
-    public :: m_euler, m_euler_ad, m_runge_kutta, m_runge_kutta_4or, m_verlet, se_m_eulercromer
+    public :: m_euler, m_euler_ad, m_runge_kutta, m_runge_kutta_4or, m_verlet, se_m_eulercromer, se_m_rkutta4or
 
 contains
+
 ! Solucion de edo's de primer orden
     subroutine m_euler(dy, x0, y0, n, x, y)
       interface
@@ -102,23 +103,23 @@ contains
             y2 = d2y(xt, y, y1) 
             y = y + norma * y1
             y1 = y1 + norma * y2      
-            !write(*,'(A4,ES15.4,1X,A3,ES20.10,1X,A5,ES20.10,1X,A5,ES20.10)')"|x_=",xt,"|y=",y,"|y_1=",y1,"|y_2=",y2  
             write(110, *) xt, y, y1, y2
         end do
 
     end subroutine m_euler_ad
 
+
     subroutine m_verlet(d2y, x0, y0, dy0, n, x, y, y1)
-    interface
-        real(8) function d2y(x, y, dy)
-        real(8), intent(in) :: x, y, dy
-        end function d2y
-    end interface
-        
+        interface
+            real(8) function d2y(x, y, dy)
+            real(8), intent(in) :: x, y, dy
+            end function d2y
+        end interface
+            
         real(8), intent(in) :: x0, y0, dy0, x
         integer, intent(in) :: n
         real(8), intent(out) :: y, y1
-        real(8) :: h, xt, dyk
+        real(8) :: h, xt, dyk, dyk_new
         integer :: i
         character(len=25) :: filename
 
@@ -133,13 +134,16 @@ contains
 
         do i = 1, n
             dyk = d2y(xt, y, y1)
+            y = y + h*y1 + 0.5*h**2*dyk
+            dyk_new = d2y(xt+h, y, y1)
+            y1 = y1 + 0.5*h*(dyk_new + dyk)
             xt = xt + h
-            y = y + h*y1 + 0.5*h**2*d2y(xt, y,y1)
-            y1 = y1 + 0.5*h*(d2y(xt, y, y1) + dyk)
         end do
 
-    end subroutine 
-            
+        close(unit=120)
+
+    end subroutine
+           
     subroutine m_runge_kutta_4or(d2y, x0, y0, dy0, n, x, y, y1)
     interface
         real(8) function d2y(x, y, dy)
@@ -225,5 +229,50 @@ contains
         end do
 
     end subroutine se_m_eulercromer
+
+    subroutine se_m_rkutta4or(dx1, dx2, t0, x10, x20, n, t, x1, x2)  
+    interface
+        real(8) function dx1(t, x1, x2)
+        real(8), intent(in) :: t, x1, x2
+        end function dx1
+
+        real(8) function dx2(t, x1, x2)
+        real(8), intent(in) :: t, x1, x2
+        end function dx2
+    end interface
+
+        real(8), intent(in) :: t0, x10, x20, t
+        integer, intent(in) :: n
+        real(8), intent(out) :: x1, x2
+        real(8) :: h, tt, l1, k1, l2, k2, l3, k3, l4, k4
+        integer :: i
+        character(len=25) :: filename
+
+        filename = "data/rk-t-x1-x2.dat"
+
+        open(unit=140, file=filename, status="unknown", action="write")
+        
+        h = abs(t - t0)/n
+        tt = t0
+        x1 = x10
+        x2 = x20
+        write(140, *) tt, x1, x2
+
+        do i = 1, n
+            tt = tt + h
+                k1 = h*dx1(tt, x1, x2)
+                l1 = h*dx2(tt, x1, x2)
+                k2 = h*dx1(tt + h*0.5, x1 + k1*0.5, x2 + l1*0.5)
+                l2 = h*dx2(tt + h*0.5, x1 + k1*0.5, x2 + l1*0.5)
+                k3 = h*dx1(tt + h*0.5, x1 + k2*0.5, x2 + l2*0.5)
+                l3 = h*dx2(tt + h*0.5, x1 + k2*0.5, x2 + l2*0.5)
+                k4 = h*dx1(tt + h, x1 + k3, x2 + l3)
+                l4 = h*dx2(tt + h, x1 + k3, x2 + l3)
+            x1 = x1 + (k1 + 2*k2 + 2*k3 + k4)/6
+            x2 = x2 + (l1 + 2*l2 + 2*l3 + l4)/6
+        write(140, *) tt, x1, x2
+        end do
+
+    end subroutine se_m_rkutta4or
 
 end module solucion_edo
