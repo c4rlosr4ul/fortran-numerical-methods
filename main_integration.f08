@@ -1,28 +1,29 @@
-program main_integracion
-use intengracion_numerica
+
+program main_integration
+    use numerical_integration
     
     implicit none 
-    real(8) :: xi, xf, rsl
+    real(8) :: lower_limit, upper_limit, result
     integer :: n
     
-    xi = 0.0d0
-    xf = 1.0d0
+    lower_limit = 0.0d0
+    upper_limit = 1.0d0
     n = 100000
 
-    write(*, *) "La integracion de f desde xi hasta xf con"
-    call m_trapecio(f, xi, xf, n, rsl)
-    write(*, *) "Metodo del trapecio: ", rsl
+    write(*, *) "Integration of f from lower limit to upper limit using:"
+    call trapezoidal_method(f, lower_limit, upper_limit, n, result)
+    write(*, *) "Trapezoidal Method: ", result
 
-    call m_simpson_un_tercio(f, xi, xf, n, rsl)
-    write(*, *) "Metodo de simpson 1/3: ", rsl
+    call simpson_one_third_method(f, lower_limit, upper_limit, n, result)
+    write(*, *) "Simpson's 1/3 Method: ", result
 
-    call m_simpson_tres_octavos(f, xi, xf, n, rsl)
-    write(*, *) "Metodo de simpson 3/8: ", rsl
+    call simpson_three_eighths_method(f, lower_limit, upper_limit, n, result)
+    write(*, *) "Simpson's 3/8 Method: ", result
 
     n = 15
 
-    call m_romberg(f, xi, xf, n, rsl)
-    write(*, *) "Metedo de Romberg: ", rsl
+    call romberg_method(f, lower_limit, upper_limit, n, result)
+    write(*, *) "Romberg's Method: ", result
     ! The best
 
 contains
@@ -32,4 +33,4 @@ contains
             f = exp(-1 * x ** 2)
     end function
 
-end program main_integracion
+end program main_integration

@@ -1,10 +1,12 @@
-program main_derivacion 
-    use derivacion_numerica
+
+program main_derivative
+    use numerical_derivative
     implicit none
     real(8) :: x, h, df
     type(func_wrapper) :: f_wrap
+
     x = 1.0
-    h = 0.01
+    h = 0.0001
 
     f_wrap%f => f
 
@@ -25,5 +27,5 @@ contains
         f = x**2
     end function f
 
-end program main_derivacion 
+end program main_derivative
 

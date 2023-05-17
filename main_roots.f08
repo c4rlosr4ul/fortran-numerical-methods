@@ -1,24 +1,23 @@
-program main_raices
-    use raices_de_ecuaciones
-    implicit none
-    real(8) :: x_0_aprox, tol, x0, raiz, a, c
 
-    x_0_aprox = 7.5 
+program main_roots
+    use equation_roots
+    implicit none
+    real(8) :: initial_approximation, tol, root, lower_limit, upper_limit
+
+    initial_approximation = 7.5 
     tol = 1e-8
     
-    call m_newton(f, d_f, x_0_aprox, tol, raiz)
-    write(*, *) "La raiz con M. Newton es", raiz
+    call newton_method(f, df, initial_approximation, tol, root)
+    write(*, *) "The root found using Newton's Method is", root
    
-    a = 7.5d0
-    c = 8.0d0
+    lower_limit = 7.5d0
+    upper_limit = 8.0d0
     
-    call m_biseccion(f, a, c, tol, raiz)
-    write(*, *) "La raiz con M. Biseccion es", raiz
+    call bisection_method(f, lower_limit, upper_limit, tol, root)
+    write(*, *) "The root found using Bisection Method is", root
 
-
-    call m_secante(f, a, c, tol, raiz)
-    write(*, *) "La raiz con M. Secente es", raiz
-
+    call secant_method(f, lower_limit, upper_limit, tol, root)
+    write(*, *) "The root found using Secant Method is", root
 
 contains 
 
@@ -28,11 +27,10 @@ contains
                f = cos(x) * cosh(x) + 1
     end function
 
-    function d_f(x)
+    function df(x)
         real(8), intent(in) :: x
-        real(8) :: d_f
-            d_f = -sin(x) * cosh(x) + cos(x) * sinh(x)
+        real(8) :: df
+            df = -sin(x) * cosh(x) + cos(x) * sinh(x)
     end function
 
-end program main_raices
-
+end program main_roots
