@@ -2,4 +2,6 @@ outputs
 trash
 class-code
 *.mod
-modules/integracion_numerica.f08
+fort.100
+script.bs
+
