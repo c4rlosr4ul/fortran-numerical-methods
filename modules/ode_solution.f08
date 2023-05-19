@@ -108,7 +108,6 @@ contains
 
     end subroutine m_euler_ad
 
-
     subroutine m_verlet(d2y, x0, y0, dy0, n, x, y, y1)
         interface
             real(8) function d2y(x, y, dy)
@@ -123,7 +122,7 @@ contains
         integer :: i
         character(len=25) :: filename
 
-        filename = "data/rk-x_y_dy.dat"
+        filename = "data/mv-x_y_dy.dat"
 
         open(unit=120, file=filename, status="unknown", action="write")
 
@@ -133,11 +132,13 @@ contains
         y1 = dy0
 
         do i = 1, n
+            write(120, *) xt, y, y1
             dyk = d2y(xt, y, y1)
             y = y + h*y1 + 0.5*h**2*dyk
             dyk_new = d2y(xt+h, y, y1)
             y1 = y1 + 0.5*h*(dyk_new + dyk)
             xt = xt + h
+            
         end do
 
         close(unit=120)

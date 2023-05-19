@@ -28,10 +28,10 @@ use solucion_edo
 ! Solucion de ecuaciones diferenciales de segundo orden
 
     x0 = 0.0d0
-    y0 = 1.0d0
-    dy0 = 2.0d0
-    n = 10
-        x = 1.0d0 
+    y0 = 0.0d0
+    dy0 = 0.0d0
+    n = 100
+        x = 5.0d0 
 
     print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     print *, "- La solucion numerica es de la EDO de 2do orden es:"
@@ -45,8 +45,7 @@ use solucion_edo
         print *, "M. Runge Kutta 4to orden:"
         write(*,'(A3,1X,A1,1X,ES14.8,6X,A7,1X,A1,1X,ES14.8)') "| x", "=", x, "| y(x)", "=", y
         write(*, '(A7,1X,A1,1X,ES14.8,3X,A8,1X,A1,1X,ES14.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
-
-    n = 1000
+   
     call m_verlet(d2y, x0, y0, dy0, n, x, y, y1)
         write(*, *) "M. Verlet"
         write(*, '(A3,1X,A1,1X,ES14.8,3X,A7,1X,A1,1X,ES14.8)') "| x", "=", x, "| y(x)", "=", y
@@ -78,7 +77,10 @@ contains
         real(8), intent(in) :: x, y, dy
         real(8) :: d2y
             !d2y = exp(x) + dy
-            d2y = 4 * dy - 4 * y
+            !d2y = 4 * dy - 4 * y
+!        d2y = -0.50d0*(dy**2 + y)
+        !d2y = 0.01*dy**2 - 9.81
+        d2y = 9.81 * 0.5 - 0.5 * dy ** 2
     end function
 
     function dy(x, y)
