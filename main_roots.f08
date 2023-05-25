@@ -4,7 +4,7 @@ program main_roots
     implicit none
     real(8) :: initial_approximation, tol, root, lower_limit, upper_limit
 
-    initial_approximation = 7.5 
+    initial_approximation = 8.5 
     tol = 1e-8
     
     call newton_method(f, df, initial_approximation, tol, root)
@@ -24,13 +24,13 @@ contains
     function f(x)
         real(8), intent(in) :: x
         real(8) :: f
-               f = cos(x) * cosh(x) + 1
+               f =  2 * atan(1) * x**2 * (9-x)
     end function
 
     function df(x)
         real(8), intent(in) :: x
         real(8) :: df
-            df = -sin(x) * cosh(x) + cos(x) * sinh(x)
+            df = 2 * atan(1) * (6*x - x**2)  
     end function
 
 end program main_roots

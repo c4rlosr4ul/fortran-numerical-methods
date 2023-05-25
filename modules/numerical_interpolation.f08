@@ -27,7 +27,6 @@ contains
 
     end subroutine 
 
-
     subroutine newton_forward_interpolation(x, y, n, xi, yi)
 
         real(8), dimension(:), intent(in) :: x, y 
@@ -63,37 +62,34 @@ contains
     end subroutine newton_forward_interpolation
 
     subroutine newton_backward_interpolation(x, y, n, xi, yi)
-
         real(8), dimension(:), intent(in) :: x, y 
         real(8), intent(in) :: xi
         integer, intent(in) :: n
         real(8), intent(out) :: yi
-        real(8), allocatable, dimension(:, :) :: F
-        real(8) ::  s, norm
-        integer :: i, j, k, m, l
+        real(8), dimension(:,:), allocatable :: F
+        real(8) :: s, norm
+        integer :: i, j
 
-        norm = abs(x(n) - x(1))/(n-1)
+        norm = (x(n) - x(1))/(n-1)
+        s = (xi - x(n))/norm
 
-        s = (xi - x(n))/norm   
-            
         allocate(F(n, n))
-             
-        do j = 1, n
-            F(j, 1) = y(j)  
-        end do 
+
+        F(:, 1) = y(:)
 
         do j = 2, n
-            do i = 1, n-j+1
-                F(i,j) = F(i+1,j-1) - F(i,j-1)
+            do i = n, j, -1
+                F(i, j) = (F(i, j-1) - F(i-1, j-1))/(x(i) - x(i-j+1))
             end do
         end do
 
-        yi = F(1, n)
+        yi = F(n, n)
 
-        do k = 1, n-1
-            yi = yi + combination(s,k) * F(1, n-k)
+        do i = n-1, 1, -1
+            yi = yi * (s - x(i)) + F(i, i)
         end do
 
+        deallocate(F)
     end subroutine newton_backward_interpolation
 
     function factorial(n)

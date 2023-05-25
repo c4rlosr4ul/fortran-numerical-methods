@@ -7,7 +7,7 @@ program interpolation
     real(8) ::  xi, yi
     character(len=32) :: filename
 
-    filename = "data/points_pol_1_xy.dat"
+    filename = "data/data_p2.dat"
 
     open(unit=10, file=filename, status="old", action="read", iostat=error_status)
     if (error_status /= 0) then
@@ -33,7 +33,7 @@ program interpolation
 
     close(10)
 
-    xi = -1.5d0
+    xi = 27.0d0
 
     call lagrange_interpolation(x, y, n, xi, yi)
 
