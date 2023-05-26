@@ -92,7 +92,8 @@ contains
     function dy(x, y)
         real(8), intent(in) :: x, y
         real(8) :: dy
-             dy = (x * y)**3 - (y/x)**2
+!             dy = (x * y)**3 - (y/x)**2
+            dy = -2*y*x
     end function
 
     function d2y(x, y, dy)
