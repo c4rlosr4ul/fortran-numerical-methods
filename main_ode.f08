@@ -9,10 +9,10 @@ use solucion_edo
 
 ! Solucion de ecuaciones diferenciales de primer orden
 
-    x0 = 1.0d0
+    x0 = 0.0d0
     y0 = 1.0d0
     n = 100
-        x = 1.10d0
+        x = 1.0d0
 
     print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     print *, "- La solucion numerica es de la EDO de primer orden es:"
