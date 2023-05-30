@@ -4,6 +4,7 @@ module solucion_edo
     public :: m1o_euler, m1o_runge_kutta_2or, m1o_runge_kutta_4or
     public :: m2o_euler, m2o_verlet,  m2o_runge_kutta_2or, m2o_runge_kutta_4or
     public :: se_m_eulercromer, se_m_rk2or, se_m_rk4or
+    public :: se2o_m_rk_2or, se2o_m_rk_4or
 
 contains
 
@@ -401,5 +402,59 @@ contains
         end do
 
     end subroutine se_m_rk4or
+
+!Solucion de sistemas de EDos de segundo grado
+
+   subroutine se2o_rk_2or(d2x1, d2x2, t0, x10, x20, dx10, dx20, n, t, x1, x2, dx1, dx2 )
+    interface
+        real(8) function d2x1(t, x1, x2, dx1, dx2)
+        real(8), intent(in) :: t, x1, x2, dx1, dx2
+        end function dx1
+
+        real(8) function d2x2(t, x1, x2, dx1, dx2))
+        real(8), intent(in) :: t, x1, x2, dx1, dx2
+        end function dx2
+    end interface
+        
+        real(8), intent(in) :: t0, x10, x20, dx10, dx20
+        integer, intent(in) :: n
+        real(8), intent(out) ::  x1, x2, dx1, dx2
+        real(8) :: h, xt, k1, l1, k2, l2
+        integer :: i
+        character(len=25) :: filename
+
+        filename = "data/se2or-rk2or-t_x1_x2_dx1_dx2.dat"
+
+        open(unit=150, file=filename, status="unknown", action="write")
+
+        h = abs(t - t0)/n
+        tt = t0; x1 = x10; x2 = x20; dx1 = dx10; dx2 = dx20
+
+        do i = 1, n
+            tt = tt + h
+                k1x1 = h * dx1
+                l1x1 = h * d2x1(tt, x1, x2, dx1, dx2) 
+
+                k1x2 = h * dx2
+                l1x2 = h * d2x2(tt, x1, x2, dx1, dx2) 
+
+                k2x1 = h * (dx1 + lx1)
+                l2x1 = h * d2x1(tt + h, x1 + k1x1, dyx1 + l1x1)
+
+                k2x2 = h * (dx2 + lx2)
+                l2x2 = h * d2x2(tt + h, x1 + k1x2, dyx2 + l1x2)
+
+
+            x1 = x1 + (k1x1 + k2x1)/2
+            x2 = x2 + (k1x2 + k2x2)/2
+
+            dx1 = dx1 + (l1x1 + l2x1)/2
+            dx2 = dx2 + (l1x1 + l2x1)/2
+
+            write(150, *) tt, x1, x2, dx1, dx2
+
+        end do
+
+    end subroutine m2o_runge_kutta_2or
 
 end module solucion_edo
