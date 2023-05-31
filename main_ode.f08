@@ -4,6 +4,7 @@ use solucion_edo
     implicit none
     real(8) :: x0, y0, dy0, x, y, y1, y2
     real(8) :: t0, x10, x20, t, x1, x2
+    real(8) :: dx10, dx20, d1x1, d1x2
     integer :: n
     character(len=25) :: filename
 
@@ -86,19 +87,24 @@ use solucion_edo
         write(*, *)"M. RungeKutta de 2do orden: "
         write(*, '(A3,1X,A1,1X,ES14.8)') "| t", "=", t
         write(*, '(A7,1X,A1,1X,ES16.8,1X,A7,1X,A1,1X,ES16.8)') "| x1(t)", "=", x1 , "| x2(t)", "=", x2
-
+!
 !  Sistema de edos de segundo grado :P
 
     t0 = 0.0d0
     x10 = 1.0d0
-    x20 = 0.0d0
-    dy10 = 1.0d0
-    dy20 = 1.0d0
-    n = 100
-        t = 5.0d0
+    x20 = 1.0d0
+    dx10 = 1.0d0
+    dx20 = 1.0d0
+    n = 1000
+        t = 10.0d0
 
     print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     print* , "La solucion del sistema de ecuaciones diferenciales de segundo grado es:"
+
+    call se2o_m_rk_2or(d2x1, d2x2, t0, x10, x20, dx10, dx20, n, t, x1, x2, d1x1, d1x2)
+    write(*, '(A3,1X,A1,1X,ES20.8)') "| t", "=", t
+    write(*, '(A8,1X,A1,1X,ES20.8,1X,A8,1X,A1,1X,ES20.8)') "| x1(t)", "=", x1 , "| x2(t)", "=", x2
+    write(*, '(A8,1X,A1,1X,ES20.8,1X,A8,1X,A1,1X,ES20.8)') "| x1'(t)", "=", d1x1 , "| x2'(t)", "=", d1x2
 
 contains 
 
@@ -117,7 +123,7 @@ contains
     end function
 
 ! Para el sistema ED 1er grado
-
+!
     function dx1(t, x1, x2)
         real(8), intent(in) :: t, x1, x2
         real(8) :: dx1
@@ -132,18 +138,30 @@ contains
             dx2 = -x1
     end function
 
-! Para el sistema ED 2do grado
-
+    ! Error porque lo uso como funcion y como variables
+!
+!! Para el sistema ED 2do grado
+!
     function d2x1(t, x1, x2, dx1, dx2)
         real(8), intent(in) :: t, x1, x2, dx1, dx2
         real(8) :: d2x1
-            d2x1 = x2
-    end function
+        real(8) :: m1, m2, k1, k2
+!!        real(8) :: g, m1, m2, l1, l2
+!!            g = 9.81; m1 = 1; m2 = 1; l1 = 1; l2 =1
+!!            d2x1 = (m2*l1*(dx1**2)*sin(x1-x2) + m2*g*sin(x2)*cos(x1-x2) + m2*l2*(dx2**2)*sin(x1-x2) - (m1+m2)*g*sin(x1)) / ((m1+m2)*l1 - m2*l1*cos(x1-x2)**2)
+            m1 = 2; m2 = 1; k1 = 1; k2 = 1
+                d2x1 = (-k1/m1)*x1 + (k2/m1)*(x2 - x1)
+    end function 
 
     function d2x2(t, x1, x2, dx1, dx2)
         real(8), intent(in) :: t, x1, x2, dx1, dx2
         real(8) :: d2x2
-            d2x2 = -x1
+        real(8) :: m1, m2, k1, k2
+!        real(8) :: g, m1, m2, l1, l2
+!            g = 9.81; m1 = 1; m2 = 1; l1 = 1; l2 =1
+!            d2x2 = (-m2*l2*(dx2**2)*sin(x1-x2)*cos(x1-x2) + (m1+m2)*(g*sin(x1)*cos(x1-x2) + l1*(dx1**2)*sin(x1-x2) - g*sin(x2))) / ((m1+m2)*l2 - m2*l2*cos(x1-x2)**2)
+        m1 = 2; m2 = 1; k1 = 1; k2 = 1
+            d2x2 = (-k2/m2)*x2 + (k1/m2)*(x1 - x2)
     end function
 
 end program main_edo
