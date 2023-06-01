@@ -4,7 +4,7 @@ module solucion_edo
     public :: m1o_euler, m1o_runge_kutta_2or, m1o_runge_kutta_4or
     public :: m2o_euler, m2o_verlet,  m2o_runge_kutta_2or, m2o_runge_kutta_4or
     public :: se_m_eulercromer, se_m_rk2or, se_m_rk4or
-    public :: se2o_m_rk_2or
+    public :: se2o_m_rk_2or, se2o_m_rk_4or
 
 contains
 
@@ -38,7 +38,7 @@ contains
             xt = xt + h
         write(90, *) xt, y
         end do
-
+        close(90)
 
     end subroutine m1o_euler
 
@@ -74,7 +74,7 @@ contains
             y = y + (k1 + k2)/2
         write(95, *) xt, y
         end do
-
+        close(95)
     end subroutine m1o_runge_kutta_2or
 
     subroutine m1o_runge_kutta_4or(dy, x0, y0, n, x, y)
@@ -111,6 +111,7 @@ contains
             y = y + (k1 + 2*k2 + 2*k3 + k4)/6
         write(100, *) xt, y
         end do
+        close(100)
 
     end subroutine m1o_runge_kutta_4or
 
@@ -148,6 +149,7 @@ contains
             xt = xt + h
             write(110, *) xt, y, y1, y2
         end do
+        close(110)
 
     end subroutine m2o_euler
 
@@ -225,9 +227,9 @@ contains
         y1 = y1 + (l1 + l2)/2
 
         write(125, *) xt, y, y1
-
+        
         end do
-
+        close(125)
     end subroutine m2o_runge_kutta_2or
 
     subroutine m2o_runge_kutta_4or(d2y, x0, y0, dy0, n, x, y, y1)
@@ -275,6 +277,7 @@ contains
         write(120, *) xt, y, y1
 
         end do
+        close(120)
 
     end subroutine m2o_runge_kutta_4or
 
@@ -314,7 +317,7 @@ contains
             x2 = x2 + h*dx2(tt, x1, x2)
             write(130, *) tt, x1, x2
         end do
-
+        close(130)
     end subroutine se_m_eulercromer
 
     subroutine se_m_rk2or(dx1, dx2, t0, x10, x20, n, t, x1, x2)  
@@ -355,6 +358,7 @@ contains
             x2 = x2 + (l1 + l2)/2
             write(135, *) tt, x1, x2
         end do
+        close(135)
 
     end subroutine se_m_rk2or
 
@@ -400,6 +404,7 @@ contains
             x2 = x2 + (l1 + 2*l2 + 2*l3 + l4)/6
             write(140, *) tt, x1, x2
         end do
+        close(140)
 
     end subroutine se_m_rk4or
 
@@ -454,6 +459,72 @@ contains
             write(150, *) tt, x1, x2, dx1, dx2
         end do
 
+        close(150)
+
     end subroutine se2o_m_rk_2or
+
+    subroutine se2o_m_rk_4or(d2x1, d2x2, t0, x10, x20, dx10, dx20, n, t, x1, x2, dx1, dx2)
+        interface
+            real(8) function d2x1(t, x1, x2, dx1, dx2)
+            real(8), intent(in) :: t, x1, x2, dx1, dx2
+            end function d2x1
+
+            real(8) function d2x2(t, x1, x2, dx1, dx2)
+            real(8), intent(in) :: t, x1, x2, dx1, dx2
+            end function d2x2
+        end interface
+            
+        real(8), intent(in) :: t0, x10, x20, dx10, dx20
+        integer, intent(in) :: n
+        real(8), intent(out) ::  x1, x2, dx1, dx2
+        real(8) :: h, tt, t, k1x1, k1x2, l1x1, l1x2, k2x1, k2x2, l2x1, l2x2
+        real(8) :: k3x1, k3x2, l3x1, l3x2, k4x1, k4x2, l4x1, l4x2
+        integer :: i
+        character(len=40) :: filename
+
+        filename = "data/se2or-rk4or-t_x1_x2_dx1_dx2.dat"
+
+        open(unit=160, file=filename, status="unknown", action="write")
+
+        h = abs(t - t0)/n
+        tt = t0; x1 = x10; x2 = x20; dx1 = dx10; dx2 = dx20
+        write(160, *) tt, x1, x2, dx1, dx2
+
+        do i = 1, n
+            tt = tt + h
+                k1x1 = h * dx1
+                l1x1 = h * d2x1(tt, x1, x2, dx1, dx2) 
+
+                k1x2 = h * dx2
+                l1x2 = h * d2x2(tt, x1, x2, dx1, dx2) 
+
+                k2x1 = h * (dx1 + 0.5d0*l1x1)
+                l2x1 = h * d2x1(tt + 0.5d0*h, x1 + 0.5d0*k1x1, x2 + 0.5d0*k1x2, dx1 + 0.5d0*l1x1, dx2 + 0.5d0*l1x2)
+
+                k2x2 = h * (dx2 + 0.5d0*l1x2)
+                l2x2 = h * d2x2(tt + 0.5d0*h, x1 + 0.5d0*k1x1, x2 + 0.5d0*k1x2, dx1 + 0.5d0*l1x1, dx2 + 0.5d0*l1x2)
+
+                k3x1 = h * (dx1 + 0.5d0*l2x1)
+                l3x1 = h * d2x1(tt + 0.5d0*h, x1 + 0.5d0*k2x1, x2 + 0.5d0*k2x2, dx1 + 0.5d0*l2x1, dx2 + 0.5d0*l2x2)
+
+                k3x2 = h * (dx2 + 0.5d0*l2x2)
+                l3x2 = h * d2x2(tt + 0.5d0*h, x1 + 0.5d0*k2x1, x2 + 0.5d0*k2x2, dx1 + 0.5d0*l2x1, dx2 + 0.5d0*l2x2)
+
+                k4x1 = h * (dx1 + l3x1)
+                l4x1 = h * d2x1(tt + h, x1 + k3x1, x2 + k3x2, dx1 + l3x1, dx2 + l3x2)
+
+                k4x2 = h * (dx2 + l3x2)
+                l4x2 = h * d2x2(tt + h, x1 + k3x1, x2 + k3x2, dx1 + l3x1, dx2 + l3x2)
+
+            x1 = x1 + (k1x1 + 2.0d0*k2x1 + 2.0d0*k3x1 + k4x1)/6
+            x2 = x2 + (k1x2 + 2.0d0*k2x2 + 2.0d0*k3x2 + k4x2)/6
+
+            dx1 = dx1 + (l1x1 + 2.0d0*l2x1 + 2.0d0*l3x1 + l4x1)/6
+            dx2 = dx2 + (l1x2 + 2.0d0*l2x2 + 2.0d0*l3x2 + l4x2)/6
+
+            write(160, *) tt, x1, x2, dx1, dx2
+        end do
+        close(160)
+    end subroutine se2o_m_rk_4or
 
 end module solucion_edo

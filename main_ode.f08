@@ -7,104 +7,110 @@ use solucion_edo
     real(8) :: dx10, dx20, d1x1, d1x2
     integer :: n
     character(len=25) :: filename
-
-!! Solucion de ecuaciones diferenciales de primer orden
-
-    x0 = 0.0d0
-    y0 = 1.0d0
-    n = 100
-        x = 1.0d0
-
-    print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    print *, "- La solucion numerica es de la EDO de primer orden es:"
-
-    call m1o_euler(dy, x0, y0, n, x, y)
-        print *, "M. Euler: "
-        write(*,'(A4,ES15.4,1X,A7,ES20.10)') "| x=",x ,"| y(x)=",y 
-
-    call m1o_runge_kutta_2or(dy, x0, y0, n, x, y)
-        print *, "M. Runge Kutta 2do orden: "
-        write(*,'(A4,ES15.4,1X,A7,ES20.10)') "| x=",x ,"| y(x)=",y 
-
-    call m1o_runge_kutta_4or(dy, x0, y0, n, x, y)
-        print *, "M. Runge Kutta 4t0 orden: "
-        write(*,'(A4,ES15.4,1X,A7,ES20.10)') "| x=",x ,"| y(x)=",y 
-
-! Solucion de ecuaciones diferenciales de segundo orden
-
-    x0 = 0.0d0
-    y0 = 1.0d0
-    dy0 = 0.0d0
-    n = 1000
-        x = 10.0d0 
-
-    print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    print *, "- La solucion numerica es de la EDO de 2do orden es:"
-     
-    call m2o_euler(d2y, x0, y0, dy0, n, x, y, y1, y2)
-        print *, "M. Euler:"
-        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
-        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
-
-    call m2o_verlet(d2y, x0, y0, dy0, n, x, y, y1)
-        write(*, *) "M. Verlet"
-        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
-        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
-
-    call m2o_runge_kutta_2or(d2y, x0, y0, dy0, n, x, y, y1)
-        print *, "M. Runge Kutta 2do orden:"
-        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
-        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
-   
-    call m2o_runge_kutta_4or(d2y, x0, y0, dy0, n, x, y, y1)
-        print *, "M. Runge Kutta 4to orden:"
-        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
-        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
-   
-
-! Sistema de edos de primer orden
-
-    t0 = 0.0d0
-    x10 = 1.0d0
-    x20 = 0.0d0
-    n = 100
-        t = 5.0d0
-
-    print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    print* , "La solucion del sistema de ecuaciones diferenciales de primer grado es:"
-    
-    call se_m_eulercromer(dx1, dx2, t0, x10, x20, n, t, x1, x2)
-        write(*, *)"M. EulerCromer: "
-        write(*, '(A3,1X,A1,1X,ES14.8)') "| t", "=", t
-        write(*, '(A7,1X,A1,1X,ES16.8,1X,A7,1X,A1,1X,ES16.8)') "| x1(t)", "=", x1 , "| x2(t)", "=", x2
-
-    call se_m_rk2or(dx1, dx2, t0, x10, x20, n, t, x1, x2)
-        write(*, *)"M. RungeKutta de 2do order: "
-        write(*, '(A3,1X,A1,1X,ES14.8)') "| t", "=", t
-        write(*, '(A7,1X,A1,1X,ES16.8,1X,A7,1X,A1,1X,ES16.8)') "| x1(t)", "=", x1 , "| x2(t)", "=", x2
-
-    call se_m_rk4or(dx1, dx2, t0, x10, x20, n, t, x1, x2)
-        write(*, *)"M. RungeKutta de 2do orden: "
-        write(*, '(A3,1X,A1,1X,ES14.8)') "| t", "=", t
-        write(*, '(A7,1X,A1,1X,ES16.8,1X,A7,1X,A1,1X,ES16.8)') "| x1(t)", "=", x1 , "| x2(t)", "=", x2
 !
+!! Solucion de ecuaciones diferenciales de primer orden
+!
+!    x0 = 0.0d0
+!    y0 = 1.0d0
+!    n = 100
+!        x = 1.0d0
+!
+!    print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+!    print *, "- La solucion numerica es de la EDO de primer orden es:"
+!
+!    call m1o_euler(dy, x0, y0, n, x, y)
+!        print *, "M. Euler: "
+!        write(*,'(A4,ES15.4,1X,A7,ES20.10)') "| x=",x ,"| y(x)=",y 
+!
+!    call m1o_runge_kutta_2or(dy, x0, y0, n, x, y)
+!        print *, "M. Runge Kutta 2do orden: "
+!        write(*,'(A4,ES15.4,1X,A7,ES20.10)') "| x=",x ,"| y(x)=",y 
+!
+!    call m1o_runge_kutta_4or(dy, x0, y0, n, x, y)
+!        print *, "M. Runge Kutta 4t0 orden: "
+!        write(*,'(A4,ES15.4,1X,A7,ES20.10)') "| x=",x ,"| y(x)=",y 
+!
+!! Solucion de ecuaciones diferenciales de segundo orden
+!
+!    x0 = 0.0d0
+!    y0 = 1.0d0
+!    dy0 = 0.0d0
+!    n = 1000
+!        x = 10.0d0 
+!
+!    print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+!    print *, "- La solucion numerica es de la EDO de 2do orden es:"
+!     
+!    call m2o_euler(d2y, x0, y0, dy0, n, x, y, y1, y2)
+!        print *, "M. Euler:"
+!        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
+!        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
+!
+!    call m2o_verlet(d2y, x0, y0, dy0, n, x, y, y1)
+!        write(*, *) "M. Verlet"
+!        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
+!        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
+!
+!    call m2o_runge_kutta_2or(d2y, x0, y0, dy0, n, x, y, y1)
+!        print *, "M. Runge Kutta 2do orden:"
+!        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
+!        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
+!   
+!    call m2o_runge_kutta_4or(d2y, x0, y0, dy0, n, x, y, y1)
+!        print *, "M. Runge Kutta 4to orden:"
+!        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
+!        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
+!   
+!
+!! Sistema de edos de primer orden
+!
+!    t0 = 0.0d0
+!    x10 = 1.0d0
+!    x20 = 0.0d0
+!    n = 100
+!        t = 5.0d0
+!
+!    print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+!    print* , "La solucion del sistema de ecuaciones diferenciales de primer grado es:"
+!    
+!    call se_m_eulercromer(dx1, dx2, t0, x10, x20, n, t, x1, x2)
+!        write(*, *)"M. EulerCromer: "
+!        write(*, '(A3,1X,A1,1X,ES14.8)') "| t", "=", t
+!        write(*, '(A7,1X,A1,1X,ES16.8,1X,A7,1X,A1,1X,ES16.8)') "| x1(t)", "=", x1 , "| x2(t)", "=", x2
+!
+!    call se_m_rk2or(dx1, dx2, t0, x10, x20, n, t, x1, x2)
+!        write(*, *)"M. RungeKutta de 2do order: "
+!        write(*, '(A3,1X,A1,1X,ES14.8)') "| t", "=", t
+!        write(*, '(A7,1X,A1,1X,ES16.8,1X,A7,1X,A1,1X,ES16.8)') "| x1(t)", "=", x1 , "| x2(t)", "=", x2
+!
+!    call se_m_rk4or(dx1, dx2, t0, x10, x20, n, t, x1, x2)
+!        write(*, *)"M. RungeKutta de 2do orden: "
+!        write(*, '(A3,1X,A1,1X,ES14.8)') "| t", "=", t
+!        write(*, '(A7,1X,A1,1X,ES16.8,1X,A7,1X,A1,1X,ES16.8)') "| x1(t)", "=", x1 , "| x2(t)", "=", x2
+!!
 !  Sistema de edos de segundo grado :P
 
     t0 = 0.0d0
-    x10 = 1.0d0
-    x20 = 1.0d0
-    dx10 = 1.0d0
-    dx20 = 1.0d0
-    n = 1000
+    x10 = 0.50d0
+    x20 = 0.50d0
+    dx10 = 0.0d0
+    dx20 = 0.0d0
+    n = 100
         t = 10.0d0
 
-    print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     print* , "La solucion del sistema de ecuaciones diferenciales de segundo grado es:"
 
     call se2o_m_rk_2or(d2x1, d2x2, t0, x10, x20, dx10, dx20, n, t, x1, x2, d1x1, d1x2)
     write(*, '(A3,1X,A1,1X,ES20.8)') "| t", "=", t
     write(*, '(A8,1X,A1,1X,ES20.8,1X,A8,1X,A1,1X,ES20.8)') "| x1(t)", "=", x1 , "| x2(t)", "=", x2
     write(*, '(A8,1X,A1,1X,ES20.8,1X,A8,1X,A1,1X,ES20.8)') "| x1'(t)", "=", d1x1 , "| x2'(t)", "=", d1x2
+
+    call se2o_m_rk_4or(d2x1, d2x2, t0, x10, x20, dx10, dx20, n, t, x1, x2, d1x1, d1x2)
+    write(*, '(A3,1X,A1,1X,ES20.8)') "| t", "=", t
+    write(*, '(A8,1X,A1,1X,ES20.8,1X,A8,1X,A1,1X,ES20.8)') "|  x1(t)", "=", x1 , "| x2(t)", "=", x2
+    write(*, '(A8,1X,A1,1X,ES20.8,1X,A8,1X,A1,1X,ES20.8)') "| x1'(t)", "=", d1x1 , "| x2'(t)", "=", d1x2
+
 
 contains 
 
@@ -149,7 +155,7 @@ contains
 !!        real(8) :: g, m1, m2, l1, l2
 !!            g = 9.81; m1 = 1; m2 = 1; l1 = 1; l2 =1
 !!            d2x1 = (m2*l1*(dx1**2)*sin(x1-x2) + m2*g*sin(x2)*cos(x1-x2) + m2*l2*(dx2**2)*sin(x1-x2) - (m1+m2)*g*sin(x1)) / ((m1+m2)*l1 - m2*l1*cos(x1-x2)**2)
-            m1 = 2; m2 = 1; k1 = 1; k2 = 1
+            m1 = 1; m2 = 1; k1 = 1; k2 = 1
                 d2x1 = (-k1/m1)*x1 + (k2/m1)*(x2 - x1)
     end function 
 
@@ -160,7 +166,7 @@ contains
 !        real(8) :: g, m1, m2, l1, l2
 !            g = 9.81; m1 = 1; m2 = 1; l1 = 1; l2 =1
 !            d2x2 = (-m2*l2*(dx2**2)*sin(x1-x2)*cos(x1-x2) + (m1+m2)*(g*sin(x1)*cos(x1-x2) + l1*(dx1**2)*sin(x1-x2) - g*sin(x2))) / ((m1+m2)*l2 - m2*l2*cos(x1-x2)**2)
-        m1 = 2; m2 = 1; k1 = 1; k2 = 1
+        m1 = 1; m2 = 1; k1 = 1; k2 = 1
             d2x2 = (-k2/m2)*x2 + (k1/m2)*(x1 - x2)
     end function
 
