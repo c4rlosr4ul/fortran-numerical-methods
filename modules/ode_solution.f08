@@ -1,4 +1,4 @@
-module solucion_edo
+module edo_solution
     implicit none
     private
     public :: m1o_euler, m1o_runge_kutta_2or, m1o_runge_kutta_4or
@@ -527,4 +527,4 @@ contains
         close(160)
     end subroutine se2o_m_rk_4or
 
-end module solucion_edo
+end module edo_solution 

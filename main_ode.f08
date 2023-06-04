@@ -30,38 +30,38 @@ use solucion_edo
 !        print *, "M. Runge Kutta 4t0 orden: "
 !        write(*,'(A4,ES15.4,1X,A7,ES20.10)') "| x=",x ,"| y(x)=",y 
 !
-!! Solucion de ecuaciones diferenciales de segundo orden
-!
-!    x0 = 0.0d0
-!    y0 = 1.0d0
-!    dy0 = 0.0d0
-!    n = 1000
-!        x = 10.0d0 
-!
-!    print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-!    print *, "- La solucion numerica es de la EDO de 2do orden es:"
-!     
-!    call m2o_euler(d2y, x0, y0, dy0, n, x, y, y1, y2)
-!        print *, "M. Euler:"
-!        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
-!        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
-!
-!    call m2o_verlet(d2y, x0, y0, dy0, n, x, y, y1)
-!        write(*, *) "M. Verlet"
-!        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
-!        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
-!
-!    call m2o_runge_kutta_2or(d2y, x0, y0, dy0, n, x, y, y1)
-!        print *, "M. Runge Kutta 2do orden:"
-!        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
-!        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
-!   
-!    call m2o_runge_kutta_4or(d2y, x0, y0, dy0, n, x, y, y1)
-!        print *, "M. Runge Kutta 4to orden:"
-!        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
-!        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
-!   
-!
+! Solucion de ecuaciones diferenciales de segundo orden
+
+    x0 = 0.0d0
+    y0 = 1.0d0
+    dy0 = 0.0d0
+    n = 1000
+        x = 15.0d0 
+
+    print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    print *, "- La solucion numerica es de la EDO de 2do orden es:"
+     
+    call m2o_euler(d2y, x0, y0, dy0, n, x, y, y1, y2)
+        print *, "M. Euler:"
+        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
+        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
+
+    call m2o_verlet(d2y, x0, y0, dy0, n, x, y, y1)
+        write(*, *) "M. Verlet"
+        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
+        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
+
+    call m2o_runge_kutta_2or(d2y, x0, y0, dy0, n, x, y, y1)
+        print *, "M. Runge Kutta 2do orden:"
+        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
+        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
+   
+    call m2o_runge_kutta_4or(d2y, x0, y0, dy0, n, x, y, y1)
+        print *, "M. Runge Kutta 4to orden:"
+        write(*,'(A3,1X,A1,1X,F20.8,6X,A7,1X,A1,1X,F20.8)') "| x", "=", x, "| y(x)", "=", y
+        write(*, '(A7,1X,A1,1X,F20.8,3X,A8,1X,A1,1X,F20.8)') "| y'(x)", "=", y1, "| y''(x)", "=", y2
+   
+
 !! Sistema de edos de primer orden
 !
 !    t0 = 0.0d0
@@ -124,8 +124,11 @@ contains
     function d2y(x, y, dy)
         real(8), intent(in) :: x, y, dy
         real(8) :: d2y
-            d2y = -81.0d0 * y
+        real(8) :: b, g, w, k, m
+!            d2y = -81.0d0 * y
 !            d2y = -0.2*dy**3 -y 
+        m = 20.0d0; b = 5.0d0; k = 20.0d0; g = b/m; w = sqrt(k/m)  
+            d2y = -g*dy - w**2 * y
     end function
 
 ! Para el sistema ED 1er grado
