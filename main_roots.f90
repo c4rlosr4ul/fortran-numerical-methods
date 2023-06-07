@@ -1,4 +1,3 @@
-
 PROGRAM main_roots
 
     USE equation_roots
