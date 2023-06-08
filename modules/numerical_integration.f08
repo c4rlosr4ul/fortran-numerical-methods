@@ -1,125 +1,124 @@
+MODULE numerical_integration
 
-module numerical_integration
-    implicit none
+    IMPLICIT NONE
     PRIVATE
     PUBLIC :: trapezoidal_method, simpson_one_third_method, simpson_three_eighths_method, romberg_method
 
-contains
+CONTAINS
 
-    subroutine trapezoidal_method(f, lower_limit, upper_limit, n, result)
+    SUBROUTINE trapezoidal_method(f, lower_limit, upper_limit, n, result)
+        INTERFACE
+            FUNCTION f(x)
+                REAL(8), INTENT(IN) :: x
+                REAL(8) :: f
+            END FUNCTION f
+        END INTERFACE
+        REAL(8), INTENT(IN) :: lower_limit, upper_limit
+        INTEGER, INTENT(IN) :: n
+        REAL(8), INTENT(OUT) :: result
+        REAL(8) :: x, h
+        INTEGER :: i
 
-    interface
-            real(8) function f(x)
-                real(8), intent(in) :: x
-            end function f
-    end interface
-
-        real(8), intent(in) :: lower_limit, upper_limit
-        integer, intent(in) :: n
-        real(8), intent(out) :: result
-        real(8) :: x , h
-        integer :: i
-
-        h = abs(lower_limit - upper_limit)/n
+        h = abs(lower_limit - upper_limit) / n
         x = lower_limit
         result = 0.0d0
 
-        do i = 1, n
-            result = result + h *(f(x + (i - 1)*h) + f(x + (i)*h))/2
-        end do
+        DO i = 1, n
+            result = result + h * (f(x + (i - 1) * h) + f(x + i * h)) / 2
+        END DO
 
-    end subroutine trapezoidal_method
+    END SUBROUTINE trapezoidal_method
 
-    subroutine simpson_one_third_method(f, lower_limit, upper_limit, n, result)
+    SUBROUTINE simpson_one_third_method(f, lower_limit, upper_limit, n, result)
+        INTERFACE
+            FUNCTION f(x)
+                REAL(8), INTENT(IN) :: x
+                REAL(8) :: f
+            END FUNCTION f
+        END INTERFACE
+        REAL(8), INTENT(IN) :: lower_limit, upper_limit
+        INTEGER, INTENT(IN) :: n
+        REAL(8), INTENT(OUT) :: result
+        REAL(8) :: x, h
+        INTEGER :: i
 
-    interface
-            real(8) function f(x)
-                real(8), intent(in) :: x
-            end function f
-    end interface
-
-        real(8), intent(in) :: lower_limit, upper_limit
-        integer, intent(in) :: n
-        real(8), intent(out) :: result
-        real(8) :: x , h 
-        integer :: i
-
-        h = abs(lower_limit - upper_limit)/n
+        h = abs(lower_limit - upper_limit) / n
         x = lower_limit
         result = 0.0d0
 
-        do i = 1, n-1, 2
-            result = result + (h/3)*(2*f(x + h*(i+1)) + 4*f(x + i*h))
-        end do 
+        DO i = 1, n - 1, 2
+            result = result + (h / 3) * (2 * f(x + h * (i + 1)) + 4 * f(x + i * h))
+        END DO
 
-        result = result + (h/3)* (f(lower_limit) - f(upper_limit))
+        result = result + (h / 3) * (f(lower_limit) + f(upper_limit))
 
-    end subroutine simpson_one_third_method
+    END SUBROUTINE simpson_one_third_method
 
-    subroutine simpson_three_eighths_method(f, lower_limit, upper_limit, n, result)
-
-    interface
-            real(8) function f(x)
-                real(8), intent(in) :: x
-            end function f
-        end interface
-
-        real(8), intent(in) :: lower_limit, upper_limit
-        integer, intent(in) :: n
-        real(8), intent(out) :: result
-        real(8) :: x, h
-        integer :: i
+    SUBROUTINE simpson_three_eighths_method(f, lower_limit, upper_limit, n, result)
+        INTERFACE
+            FUNCTION f(x)
+                REAL(8), INTENT(IN) :: x
+                REAL(8) :: f
+            END FUNCTION f
+        END INTERFACE
+        REAL(8), INTENT(IN) :: lower_limit, upper_limit
+        INTEGER, INTENT(IN) :: n
+        REAL(8), INTENT(OUT) :: result
+        REAL(8) :: x, h
+        INTEGER :: i
 
         h = abs(upper_limit - lower_limit) / n
         x = lower_limit
         result = 0.0d0
 
-        do i = 1, n - 1
-            if (mod(i, 3) == 0) then
+        DO i = 1, n - 1
+            IF (MOD(i, 3) == 0) THEN
                 result = result + 2.0d0 * f(x + i * h)
-            else
+            ELSE
                 result = result + 3.0d0 * f(x + i * h)
-            end if
-        end do
-        result = 0.3750d0 * h  * (f(lower_limit) + f(upper_limit) + result)
+            END IF
+        END DO
 
-    end subroutine simpson_three_eighths_method
-    
-    subroutine romberg_method(f, lower_limit, upper_limit, n, result)
+        result = 0.3750d0 * h * (f(lower_limit) + f(upper_limit) + result)
 
-    interface
-            real(8) function f(x)
-                real(8), intent(in) :: x
-            end function f
-        end interface
+    END SUBROUTINE simpson_three_eighths_method
 
-        real(8), intent(in) :: lower_limit, upper_limit
-        integer, intent(in) :: n
-        real(8), intent(out) :: result
-        real(8), allocatable :: R(:, :)
-        real(8) :: x, h, sum
-        integer :: i, j, k, m
+    SUBROUTINE romberg_method(f, lower_limit, upper_limit, n, result)
+        INTERFACE
+            FUNCTION f(x)
+                REAL(8), INTENT(IN) :: x
+                REAL(8) :: f
+            END FUNCTION f
+        END INTERFACE
+        REAL(8), INTENT(IN) :: lower_limit, upper_limit
+        INTEGER, INTENT(IN) :: n
+        REAL(8), INTENT(OUT) :: result
+        REAL(8), ALLOCATABLE :: R(:, :)
+        REAL(8) :: x, h, sum
+        INTEGER :: i, j, k, m
 
-        allocate(R(n, n))
-        
-        R(1,1) = (upper_limit - lower_limit) * 0.5 * (f(lower_limit) + f(upper_limit))
-      
-          do i = 2, n 
-            sum = 0
-            do j = 1, (2**(i-2)), 1
-              sum = sum + f(lower_limit + ((upper_limit - lower_limit) / 2**(i-2)) * (j - 0.5))
-            end do
-            R(i,1) = 0.5 * (R(i-1,1) + ((upper_limit - lower_limit) / (2**(i-2))) * sum)
-          end do
-          
-          do k = 2, n
-            do m = k, n
-              R(m,k) = ((4**(k-1)) * R(m,k-1) - R(m-1,k-1)) / (4**(k-1) - 1)
-            end do
-          end do
-        result =  R(n,n)
+        ALLOCATE(R(n, n))
 
-    end subroutine romberg_method
-    
-end module numerical_integration
+        R(1, 1) = (upper_limit - lower_limit) * 0.5d0 * (f(lower_limit) + f(upper_limit))
 
+        DO i = 2, n
+            sum = 0.0d0
+            DO j = 1, 2**(i - 2), 1
+                sum = sum + f(lower_limit + ((upper_limit - lower_limit) / 2**(i - 2)) * (j - 0.5d0))
+            END DO
+            R(i, 1) = 0.5d0 * (R(i - 1, 1) + ((upper_limit - lower_limit) / (2**(i - 2))) * sum)
+        END DO
+
+        DO k = 2, n
+            DO m = k, n
+                R(m, k) = ((4**(k - 1)) * R(m, k - 1) - R(m - 1, k - 1)) / (4**(k - 1) - 1)
+            END DO
+        END DO
+
+        result = R(n, n)
+
+        DEALLOCATE(R)
+
+    END SUBROUTINE romberg_method
+
+END MODULE numerical_integration
