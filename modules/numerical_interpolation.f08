@@ -1,119 +1,123 @@
+MODULE numerical_interpolation
+    IMPLICIT NONE
+    PRIVATE
+    PUBLIC :: lagrange_interpolation, newton_forward_interpolation, newton_backward_interpolation
 
-module numerical_interpolation
-    implicit none
-    private 
-    public  :: lagrange_interpolation, newton_forward_interpolation, newton_backward_interpolation
+CONTAINS
 
-contains
-    
-    subroutine lagrange_interpolation(x, y, n, xi, yi)
-    
-        real(8), dimension(:), intent(in) :: x, y 
-        real(8), intent(in) :: xi
-        integer, intent(in) :: n
-        real(8), intent(out) :: yi
-        real(8) ::  sum,  product
-        integer :: i, j
+    SUBROUTINE lagrange_interpolation(x, y, n, xi, yi)
+        REAL(8), DIMENSION(:), INTENT(IN) :: x, y
+        REAL(8), INTENT(IN) :: xi
+        INTEGER, INTENT(IN) :: n
+        REAL(8), INTENT(OUT) :: yi
+        REAL(8) :: ssum, prod
+        INTEGER :: i, j
 
-         do i = 1, n
-            product = 1.0d0
-            do j = 1, n
-              if (i /= j) then
-              product = product * (xi -x(j))/(x(i)-x(j))
-              end if
-            end do
-            yi = yi + product * y(i)
-         end do
+        yi = 0.0d0
 
-    end subroutine 
+        DO i = 1, n
+            prod = 1.0d0
+            DO j = 1, n
+                IF (i /= j) THEN
+                    prod = prod * (xi - x(j)) / (x(i) - x(j))
+                END IF
+            END DO
+            yi = yi + prod * y(i)
+        END DO
 
-    subroutine newton_forward_interpolation(x, y, n, xi, yi)
+    END SUBROUTINE lagrange_interpolation
 
-        real(8), dimension(:), intent(in) :: x, y 
-        real(8), intent(in) :: xi
-        integer, intent(in) :: n
-        real(8), intent(out) :: yi
-        real(8), allocatable, dimension(:, :) :: F
-        real(8) ::  s, norm
-        integer :: j, k, m, l
+    SUBROUTINE newton_forward_interpolation(x, y, n, xi, yi)
+        REAL(8), DIMENSION(:), INTENT(IN) :: x, y
+        REAL(8), INTENT(IN) :: xi
+        INTEGER, INTENT(IN) :: n
+        REAL(8), INTENT(OUT) :: yi
+        REAL(8), ALLOCATABLE, DIMENSION(:, :) :: F
+        REAL(8) :: s, norm
+        INTEGER :: j, k, m, l
 
-        norm = abs(x(n) - x(1))/(n-1)
+        norm = ABS(x(n) - x(1)) / REAL(n - 1)
 
-        s = (xi-x(1))/norm   
-        
-        allocate(F(n, n))
+        s = (xi - x(1)) / norm
 
-        do j = 1, n
-            F(j, 1) = y(j)  
-        end do
+        ALLOCATE(F(n, n))
 
-        do k = 2, n
-            do m = 1, n-k+1
-                F(m,k) = F(m+1,k-1) - F(m,k-1)
-            end do
-        end do
+        DO j = 1, n
+            F(j, 1) = y(j)
+        END DO
 
-        yi = F(1,1)
+        DO k = 2, n
+            DO m = 1, n - k + 1
+                F(m, k) = F(m + 1, k - 1) - F(m, k - 1)
+            END DO
+        END DO
 
-        do l = 2, n
-            yi = yi + combination(s,l-1) * F(1,l)
-        end do    
+        yi = F(1, 1)
 
-    end subroutine newton_forward_interpolation
+        DO l = 2, n
+            yi = yi + combination(s, l - 1) * F(1, l)
+        END DO
 
-    subroutine newton_backward_interpolation(x, y, n, xi, yi)
-        real(8), dimension(:), intent(in) :: x, y 
-        real(8), intent(in) :: xi
-        integer, intent(in) :: n
-        real(8), intent(out) :: yi
-        real(8), dimension(:,:), allocatable :: F
-        real(8) :: s, norm
-        integer :: i, j
+        DEALLOCATE(F)
 
-        norm = (x(n) - x(1))/(n-1)
-        s = (xi - x(n))/norm
+    END SUBROUTINE newton_forward_interpolation
 
-        allocate(F(n, n))
+    SUBROUTINE newton_backward_interpolation(x, y, n, xi, yi)
+        REAL(8), DIMENSION(:), INTENT(IN) :: x, y
+        REAL(8), INTENT(IN) :: xi
+        INTEGER, INTENT(IN) :: n
+        REAL(8), INTENT(OUT) :: yi
+        REAL(8), DIMENSION(:, :), ALLOCATABLE :: F
+        REAL(8) :: s, norm
+        INTEGER :: i, j
+
+        norm = (x(n) - x(1)) / REAL(n - 1)
+        s = (xi - x(n)) / norm
+
+        ALLOCATE(F(n, n))
 
         F(:, 1) = y(:)
 
-        do j = 2, n
-            do i = n, j, -1
-                F(i, j) = (F(i, j-1) - F(i-1, j-1))/(x(i) - x(i-j+1))
-            end do
-        end do
+        DO j = 2, n
+            DO i = n, j, -1
+                F(i, j) = (F(i, j - 1) - F(i - 1, j - 1)) / (x(i) - x(i - j + 1))
+            END DO
+        END DO
 
         yi = F(n, n)
 
-        do i = n-1, 1, -1
+        DO i = n - 1, 1, -1
             yi = yi * (s - x(i)) + F(i, i)
-        end do
+        END DO
 
-        deallocate(F)
-    end subroutine newton_backward_interpolation
+        DEALLOCATE(F)
+    END SUBROUTINE newton_backward_interpolation
 
-    function factorial(n)
-    implicit none
-    integer :: factorial ,n ,i
-        if (n==1) then
+    FUNCTION factorial(n)
+        IMPLICIT NONE
+        INTEGER :: factorial, n, i
+
+        IF (n == 1) THEN
             factorial = 1
-        else
+        ELSE
             factorial = 1
-            do i= 1, n
-            factorial = factorial * i
-            end do
-        end if
-    end function
+            DO i = 1, n
+                factorial = factorial * i
+            END DO
+        END IF
 
-    function combination(s,i)
-        implicit none
-        real(8) :: s, combination
-        integer :: i, k
+    END FUNCTION factorial
+
+    FUNCTION combination(s, i)
+        IMPLICIT NONE
+        REAL(8) :: s, combination
+        INTEGER :: i, k
+
         combination = 1.0d0
-        do k = 0, i-1
-         combination = combination * (s-k)
-        end do
-        combination = combination/factorial(i)
-     end function
+        DO k = 0, i - 1
+            combination = combination * (s - k)
+        END DO
+        combination = combination / factorial(i)
+    END FUNCTION combination
 
-end module numerical_interpolation
+END MODULE numerical_interpolation
