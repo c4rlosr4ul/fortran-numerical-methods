@@ -248,13 +248,13 @@ contains
 
         filename = "data/m2o-rk4or-x_y_dy.dat"
 
-        open(unit=120, file=filename, status="unknown", action="write")
+        open(unit=130, file=filename, status="unknown", action="write")
 
         h = abs(x - x0)/n
         xt = x0
         y = y0
         y1 = dy0
-        write(120, *) xt, y, y1
+        write(130, *) xt, y, y1
 
         do i = 1, n
             xt = xt + h
@@ -274,10 +274,10 @@ contains
         y = y + (k1 + 2*k2 + 2*k3 + k4)/6
         y1 = y1 + (l1 + 2*l2 + 2*l3 + l4)/6
 
-        write(120, *) xt, y, y1
+        write(130, *) xt, y, y1
 
         end do
-        close(120)
+        close(130)
 
     end subroutine m2o_runge_kutta_4or
 
@@ -303,21 +303,21 @@ contains
 
         filename = "data/se-ec-t-x1-x2.dat"
 
-        open(unit=130, file=filename, status="unknown", action="write")
+        open(unit=132, file=filename, status="unknown", action="write")
         
         h = abs(t - t0)/n
         tt = t0
         x1 = x10
         x2 = x20
-        write(130, *) tt, x1, x2
+        write(132, *) tt, x1, x2
 
         do i = 1, n
             tt = tt + h
             x1 = x1 + h*dx1(tt, x1, x2)
             x2 = x2 + h*dx2(tt, x1, x2)
-            write(130, *) tt, x1, x2
+            write(132, *) tt, x1, x2
         end do
-        close(130)
+        close(132)
     end subroutine se_m_eulercromer
 
     subroutine se_m_rk2or(dx1, dx2, t0, x10, x20, n, t, x1, x2)  
