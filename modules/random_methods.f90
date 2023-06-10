@@ -1,6 +1,9 @@
 MODULE random_methods
     IMPLICIT NONE
-    
+    PRIVATE
+    PUBLIC :: calculate_pi 
+    PUBLIC :: monte_carlo_integration, double_integral_monte_carlo
+    PUBLIC :: calculate_volumes
 CONTAINS
 
     SUBROUTINE calculate_pi(n, pi)
@@ -29,7 +32,6 @@ CONTAINS
             END FUNCTION f
         END INTERFACE
         
-        IMPLICIT NONE
         REAL(8), INTENT(IN) :: x0, x1
         INTEGER, INTENT(IN) :: n
         REAL(8), INTENT(OUT) :: rsl
@@ -61,7 +63,6 @@ CONTAINS
             END FUNCTION f
         END INTERFACE
         
-        IMPLICIT NONE
         REAL(8), INTENT(IN) :: x0, x1, y0, y1
         INTEGER, INTENT(IN) :: n
         REAL(8), INTENT(OUT) :: rsl
@@ -87,21 +88,15 @@ CONTAINS
         rsl = (x1 - x0) * (y1 - y0) * (f(x1, y1) - f(x0, y0)) * (in_ / n)
     END SUBROUTINE double_integral_monte_carlo
     
-    SUBROUTINE calculate_volumes(f, x0, x1, y0, y1, z0, z1, n, rsl)
-        INTERFACE
-            REAL(8) FUNCTION f(x, y, z)
-                REAL(8), INTENT(IN) :: x, y, z
-            END FUNCTION f
-        END INTERFACE
+    SUBROUTINE calculate_volumes(x0, x1, y0, y1, z0, z1, n, rsl)
         
-        IMPLICIT NONE
         REAL(8), INTENT(IN) :: x0, x1, y0, y1, z0, z1
         INTEGER, INTENT(IN) :: n
         REAL(8), INTENT(OUT) :: rsl
         INTEGER :: i
-        REAL(8) :: rxx, ryy, rzz, x, y, z, in_
+        REAL(8) :: rxx, ryy, rzz, x, y, z, in_, c1, c2
         
-        in_ = 0.0
+        in_ = 0.0d0
         
         DO i = 1, n
             CALL random_number(rxx)
@@ -112,7 +107,12 @@ CONTAINS
             y = ryy * (y1 - y0) + y0
             z = rzz * (z1 - z0) + z0
             
-            IF (f(x, y, z) <= 0.0) THEN
+       !Condition
+       c1 = x**2 + SIN(y) - z 
+       c2 = x - z + EXP(y) - 1.d0
+       ! We need to know waht surface is up the the other to make all rigthjjjj 
+
+            IF (c1 <= 0.0d0 .and. c2 <= 0.d0) THEN
                 in_ = in_ + 1
             END IF
         END DO
