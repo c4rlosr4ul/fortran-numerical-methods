@@ -1,3 +1,13 @@
+!------------------------------------------------------------------------------
+! Program: Ordinary Differential Equations (ODE) Solver
+! Authors: Carlos Raul
+! Description: This program provides functions to solve first-order and
+!              second-order ODEs, as well as systems of first-order ODEs
+!              and systems of second-order ODEs. It includes different
+!              numerical methods such as Euler's method, Runge-Kutta 2nd
+!              and 4th order methods. The solutions are written to output
+!              files for further analysis and visualization.
+!------------------------------------------------------------------------------
 module edo_solution
     implicit none
     private
@@ -21,24 +31,24 @@ contains
         real(8), intent(out) :: y
         real(8) :: norma, xt, h
         integer :: i
-        character(len=25) :: filename
+        character(len=32) :: filename
 
         filename = "data/m1o-e-x_y.dat"
 
-        open(unit=90, file=filename, status="unknown", action="write")
+        open(unit=10, file=filename, status="unknown", action="write")
 
         xt = x0
         y = y0
         norma = abs(x - x0)/n
         h = norma
-        write(90, *) xt, y
+        write(10, *) xt, y
 
         do i = 1, n
             y = y + h*dy(xt, y)
             xt = xt + h
-        write(90, *) xt, y
+        write(10, *) xt, y
         end do
-        close(90)
+        close(10)
 
     end subroutine m1o_euler
 
@@ -55,26 +65,26 @@ contains
         real(8), intent(out) :: y
         real(8) :: norma, xt, h, k1, k2, k3, k4
         integer :: i
-        character(len=30) :: filename
+        character(len=32) :: filename
 
         filename = "data/m1o-rk2or-x_y_y1.dat"
 
-        open(unit=95, file=filename, status="unknown", action="write")
+        open(unit=20, file=filename, status="unknown", action="write")
 
         xt = x0
         y = y0
         norma = abs(x - x0)/n
         h = norma
-        write(95, *) xt, y
+        write(20, *) xt, y
 
         do i = 1, n, 1
                 k1 = h * dy(xt, y)
             xt = xt + h
                 k2 = h * dy(xt, y + k1)
             y = y + (k1 + k2)/2
-        write(95, *) xt, y
+        write(20, *) xt, y
         end do
-        close(95)
+        close(20)
     end subroutine m1o_runge_kutta_2or
 
     subroutine m1o_runge_kutta_4or(dy, x0, y0, n, x, y)
@@ -90,17 +100,17 @@ contains
         real(8), intent(out) :: y
         real(8) :: norma, xt, h, k1, k2, k3, k4
         integer :: i
-        character(len=30) :: filename
+        character(len=32) :: filename
 
         filename = "data/m1o-rk4or_x_y_y1.dat"
 
-        open(unit=100, file=filename, status="unknown", action="write")
+        open(unit=30, file=filename, status="unknown", action="write")
 
         xt = x0
         y = y0
         norma = abs(x - x0)/n
         h = norma
-        write(100, *) xt, y
+        write(30, *) xt, y
 
         do i = 1, n, 1
             xt = xt + h
@@ -109,9 +119,9 @@ contains
                 k3 = h * dy(xt + h*0.5, y + k2 *0.5)
                 k4 = h * dy(xt + h, y + k3)
             y = y + (k1 + 2*k2 + 2*k3 + k4)/6
-        write(100, *) xt, y
+        write(30, *) xt, y
         end do
-        close(100)
+        close(30)
 
     end subroutine m1o_runge_kutta_4or
 
@@ -129,27 +139,27 @@ contains
         real(8), intent(out) :: y, y1, y2
         real(8) :: norma, xt, h
         integer :: i
-        character(len=30) :: filename
+        character(len=32) :: filename
 
         filename = "data/m2o-e-x_y_y1_y2.dat"
 
-        open(unit=110, file=filename, status="unknown", action="write")
+        open(unit=40, file=filename, status="unknown", action="write")
 
         norma = abs(x - x0)/n
         h = norma
         xt = x0
         y = y0
         y1 = dy0
-        write(110, *) xt, y, y1
+        write(40, *) xt, y, y1
 
         do i = 1, n
             y2 = d2y(xt, y, y1)
             y1 = y1 + h * y2
             y = y + h * y1
             xt = xt + h
-            write(110, *) xt, y, y1, y2
+            write(40, *) xt, y, y1, y2
         end do
-        close(110)
+        close(40)
 
     end subroutine m2o_euler
 
@@ -165,17 +175,17 @@ contains
         real(8), intent(out) :: y, y1
         real(8) :: h, xt, dyk, dyk_new
         integer :: i
-        character(len=25) :: filename
+        character(len=32) :: filename
 
         filename = "data/m2o-mv-x_y_dy.dat"
 
-        open(unit=120, file=filename, status="unknown", action="write")
+        open(unit=50, file=filename, status="unknown", action="write")
 
         h = abs(x - x0)/n
         xt = x0
         y = y0
         y1 = dy0
-        write(120, *) xt, y, y1
+        write(50, *) xt, y, y1
 
         do i = 1, n
             dyk = d2y(xt, y, y1)
@@ -183,10 +193,10 @@ contains
             dyk_new = d2y(xt+h, y, y1)
             y1 = y1 + 0.5*h*(dyk_new + dyk)
             xt = xt + h
-            write(120, *) xt, y, y1
+            write(50, *) xt, y, y1
         end do
 
-        close(unit=120)
+        close(50)
 
     end subroutine m2o_verlet
            
@@ -202,17 +212,17 @@ contains
         real(8), intent(out) :: y, y1
         real(8) :: h, xt, k1, l1, k2, l2
         integer :: i
-        character(len=25) :: filename
+        character(len=32) :: filename
 
         filename = "data/m2o-rk2or-x_y_dy.dat"
 
-        open(unit=125, file=filename, status="unknown", action="write")
+        open(unit=60, file=filename, status="unknown", action="write")
 
         h = abs(x - x0)/n
         xt = x0
         y = y0
         y1 = dy0
-        write(125, *) xt, y, y1
+        write(60, *) xt, y, y1
 
         do i = 1, n
             xt = xt + h
@@ -226,10 +236,10 @@ contains
         y = y + (k1 + k2)/2
         y1 = y1 + (l1 + l2)/2
 
-        write(125, *) xt, y, y1
+        write(60, *) xt, y, y1
         
         end do
-        close(125)
+        close(60)
     end subroutine m2o_runge_kutta_2or
 
     subroutine m2o_runge_kutta_4or(d2y, x0, y0, dy0, n, x, y, y1)
@@ -244,17 +254,17 @@ contains
         real(8), intent(out) :: y, y1
         real(8) :: h, xt, k1, l1, k2, l2, k3, l3, k4, l4
         integer :: i
-        character(len=25) :: filename
+        character(len=32) :: filename
 
         filename = "data/m2o-rk4or-x_y_dy.dat"
 
-        open(unit=130, file=filename, status="unknown", action="write")
+        open(unit=70, file=filename, status="unknown", action="write")
 
         h = abs(x - x0)/n
         xt = x0
         y = y0
         y1 = dy0
-        write(130, *) xt, y, y1
+        write(70, *) xt, y, y1
 
         do i = 1, n
             xt = xt + h
@@ -274,10 +284,10 @@ contains
         y = y + (k1 + 2*k2 + 2*k3 + k4)/6
         y1 = y1 + (l1 + 2*l2 + 2*l3 + l4)/6
 
-        write(130, *) xt, y, y1
+        write(70, *) xt, y, y1
 
         end do
-        close(130)
+        close(70)
 
     end subroutine m2o_runge_kutta_4or
 
@@ -299,25 +309,25 @@ contains
         real(8), intent(out) :: x1, x2
         real(8) :: h, tt
         integer :: i
-        character(len=25) :: filename
+        character(len=32) :: filename
 
         filename = "data/se-ec-t-x1-x2.dat"
 
-        open(unit=132, file=filename, status="unknown", action="write")
+        open(unit=80, file=filename, status="unknown", action="write")
         
         h = abs(t - t0)/n
         tt = t0
         x1 = x10
         x2 = x20
-        write(132, *) tt, x1, x2
+        write(80, *) tt, x1, x2
 
         do i = 1, n
             tt = tt + h
             x1 = x1 + h*dx1(tt, x1, x2)
             x2 = x2 + h*dx2(tt, x1, x2)
-            write(132, *) tt, x1, x2
+            write(80, *) tt, x1, x2
         end do
-        close(132)
+        close(80)
     end subroutine se_m_eulercromer
 
     subroutine se_m_rk2or(dx1, dx2, t0, x10, x20, n, t, x1, x2)  
@@ -336,17 +346,17 @@ contains
         real(8), intent(out) :: x1, x2
         real(8) :: h, tt, l1, k1, l2, k2, l3, k3, l4, k4
         integer :: i
-        character(len=25) :: filename
+        character(len=32) :: filename
 
         filename = "data/se-rk2or-t-x1-x2.dat"
 
-        open(unit=135, file=filename, status="unknown", action="write")
+        open(unit=90, file=filename, status="unknown", action="write")
         
         h = abs(t - t0)/n
         tt = t0
         x1 = x10
         x2 = x20
-        write(135, *) tt, x1, x2
+        write(90, *) tt, x1, x2
 
         do i = 1, n
             tt = tt + h
@@ -356,9 +366,9 @@ contains
                 l2 = h*dx2(tt + h, x1 + k1, x2 + l1)
             x1 = x1 + (k1 + k2)/2
             x2 = x2 + (l1 + l2)/2
-            write(135, *) tt, x1, x2
+            write(90, *) tt, x1, x2
         end do
-        close(135)
+        close(90)
 
     end subroutine se_m_rk2or
 
@@ -378,17 +388,17 @@ contains
         real(8), intent(out) :: x1, x2
         real(8) :: h, tt, l1, k1, l2, k2, l3, k3, l4, k4
         integer :: i
-        character(len=25) :: filename
+        character(len=32) :: filename
 
         filename = "data/se-rk4or-t-x1-x2.dat"
 
-        open(unit=140, file=filename, status="unknown", action="write")
+        open(unit=100, file=filename, status="unknown", action="write")
         
         h = abs(t - t0)/n
         tt = t0
         x1 = x10
         x2 = x20
-        write(140, *) tt, x1, x2
+        write(100, *) tt, x1, x2
 
         do i = 1, n
             tt = tt + h
@@ -402,9 +412,9 @@ contains
                 l4 = h*dx2(tt + h, x1 + k3, x2 + l3)
             x1 = x1 + (k1 + 2*k2 + 2*k3 + k4)/6
             x2 = x2 + (l1 + 2*l2 + 2*l3 + l4)/6
-            write(140, *) tt, x1, x2
+            write(100, *) tt, x1, x2
         end do
-        close(140)
+        close(100)
 
     end subroutine se_m_rk4or
 
@@ -426,15 +436,15 @@ contains
         real(8), intent(out) ::  x1, x2, dx1, dx2
         real(8) :: h, tt, t,  k1x1, k1x2, l1x1, l1x2, k2x1, k2x2, l2x1, l2x2
         integer :: i
-        character(len=40) :: filename
+        character(len=64) :: filename
 
         filename = "data/se2or-rk2or-t_x1_x2_dx1_dx2.dat"
 
-        open(unit=150, file=filename, status="unknown", action="write")
+        open(unit=110, file=filename, status="unknown", action="write")
 
         h = abs(t - t0)/n
         tt = t0; x1 = x10; x2 = x20; dx1 = dx10; dx2 = dx20
-        write(150, *) tt, x1, x2, dx1, dx2
+        write(110, *) tt, x1, x2, dx1, dx2
 
         do i = 1, n
             tt = tt + h
@@ -456,10 +466,10 @@ contains
             dx1 = dx1 + (l1x1 + l2x1)/2
             dx2 = dx2 + (l1x2 + l2x2)/2
 
-            write(150, *) tt, x1, x2, dx1, dx2
+            write(110, *) tt, x1, x2, dx1, dx2
         end do
 
-        close(150)
+        close(110)
 
     end subroutine se2o_m_rk_2or
 
@@ -480,15 +490,15 @@ contains
         real(8) :: h, tt, t, k1x1, k1x2, l1x1, l1x2, k2x1, k2x2, l2x1, l2x2
         real(8) :: k3x1, k3x2, l3x1, l3x2, k4x1, k4x2, l4x1, l4x2
         integer :: i
-        character(len=40) :: filename
+        character(len=64) :: filename
 
         filename = "data/se2or-rk4or-t_x1_x2_dx1_dx2.dat"
 
-        open(unit=160, file=filename, status="unknown", action="write")
+        open(unit=120, file=filename, status="unknown", action="write")
 
         h = abs(t - t0)/n
         tt = t0; x1 = x10; x2 = x20; dx1 = dx10; dx2 = dx20
-        write(160, *) tt, x1, x2, dx1, dx2
+        write(120, *) tt, x1, x2, dx1, dx2
 
         do i = 1, n
             tt = tt + h
@@ -522,9 +532,9 @@ contains
             dx1 = dx1 + (l1x1 + 2.0d0*l2x1 + 2.0d0*l3x1 + l4x1)/6
             dx2 = dx2 + (l1x2 + 2.0d0*l2x2 + 2.0d0*l3x2 + l4x2)/6
 
-            write(160, *) tt, x1, x2, dx1, dx2
+            write(120, *) tt, x1, x2, dx1, dx2
         end do
-        close(160)
+        close(120)
     end subroutine se2o_m_rk_4or
 
 end module edo_solution 
