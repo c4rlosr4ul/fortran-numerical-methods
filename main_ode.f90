@@ -15,13 +15,13 @@ program main_edo
     real(8) :: t0, x10, x20, x1, x2
     real(8) :: dx10, dx20, d1x1, d1x2
     integer :: n
-    character(len=30) :: filename
+    !character(len=32) :: filename
 
     ! Solve first-order differential equations
     x0 = 0.0d0
     y0 = 1.0d0
     n = 1000
-    x = 10.0d0
+    x = 1.0d0
 
     print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     print *, "- The numerical solution of the first-order ODE is:"
@@ -135,7 +135,7 @@ contains
         real(8), intent(in) :: x, y
         real(8) :: m, b, g, w, F0
             m = 1.0d0; g = 9.81d0; w = 2.0d0; F0 = 1.2d0
-        dy = F0*cos(w*x)/m - g*sin(y)
+   dy = F0*cos(w*x)/m - g*sin(y)
 
     end function
 

@@ -3,5 +3,6 @@ exams
 *.mod
 fort.100
 script.bs
-nbw.f08
 test.f90
+package-lock.json
+package.json

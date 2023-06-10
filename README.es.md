@@ -1,46 +1,84 @@
 # Métodos Numéricos en Fortran
-[![Idioma: Inglés](https://img.shields.io/badge/Language-English-blue)](./README.md)
-[![Idioma: Español](https://img.shields.io/badge/Language-Español-green)](./README.es.md)
 
-Este repositorio contiene implementaciones de diversos métodos numéricos en el lenguaje de programación Fortran. Los métodos incluyen la solución de ecuaciones diferenciales ordinarias, interpolación numérica y búsqueda de raíces de ecuaciones, entre otros.
+[![Idioma: Inglés](https://img.shields.io/badge/Language-English-blue)](./README.md) [![Idioma: Español](https://img.shields.io/badge/Language-Espa%C3%B1ol-green)](./README.es.md)
 
-## Contenido
+Bienvenido a nuestro repositorio dedicado a las implementaciones de varios métodos numéricos utilizando el lenguaje de programación Fortran. Ofrecemos una amplia gama de métodos que pueden ser utilizados en muchos campos de estudio, desde la resolución de ecuaciones diferenciales ordinarias, interpolación numérica, hasta la búsqueda de raíces de ecuaciones, y mucho más. 
 
-- `class-source`: Contiene los archivos de código fuente de clases a implementar en futuros desarrollos.
-- `data`: Contiene archivos de datos utilizados como entrada para los programas de ejemplo.
-- `modules`: Contiene módulos de Fortran para métodos numéricos específicos.
-- `outputs`: Contiene archivos de salida generados por los programas de ejemplos.
-- `source`: Contiene el código fuente principal de los métodos numéricos de los cuales se crean los módulos.
-- `trash`: Directorio utilizado para almacenar archivos temporales y en proceso de organización.
+## Estructura del Repositorio
 
-## Ejemplos de programas principales
+-   `data`: Este directorio almacena archivos de datos que sirven como entrada para nuestros programas de demostración.
+-   `modules`: Este directorio contiene módulos de Fortran para distintos métodos numéricos.
+-   `outputs`: Este directorio se utiliza para almacenar archivos de salida generados por nuestros programas de demostración.
+-   `trash`: Este es un directorio de retención temporal para archivos efímeros y archivos que están actualmente en proceso de organización.
 
-- `main_edo.f90`: Programa principal para resolver ecuaciones diferenciales ordinarias.
-- `main_interpolacion.f90`: Programa principal para realizar interpolación numérica.
-- `main_raices.f90`: Programa principal para buscar raíces de ecuaciones.
+## Programas Destacados y Implementaciones de Métodos
 
-## Cómo compilar y ejecutar
+A continuación se presenta una lista de nuestros programas principales y los métodos numéricos que implementan. Cada entrada de la tabla indica el estado actual de implementación. Continuamos trabajando en este repositorio y esperamos completar los métodos inacabados pronto.
 
-Para compilar y ejecutar los ejemplos de programas principales, sigue estos pasos:
+### Programas Principales y Sus Métodos
 
-1. Navega al directorio raíz del repositorio.
+| Programa Principal                | Método                        | Estado |
+|-----------------------------|-------------------------------|--------|
+| `main_derivative.f90`       | Derivadas Numéricas         | ✔️      |
+| `main_integration.f90`      | Método de Trapecios            | ✔️      |
+|                             | Método de Simpson 1/3          | ✔️      |
+|                             | Método de Simpson 3/8          | ✔️      |
+|                             | Método de Romberg                | ✔️      |
+| `main_interpolation.f90`    | Interpolación de Lagrange        | ✔️      |
+|                             | Interpolación hacia Adelante de Newton| ✔️      |
+|                             | Interpolación hacia Atrás de Newton| ❌    |
+| `main_ode.f90`              | Método de Euler (1er Orden)    | ✔️      |
+|                             | Método de Runge-Kutta 2º Orden (1er Orden)| ✔️  |
+|                             | Método de Runge-Kutta 4º Orden (1er Orden)| ✔️  |
+|                             | Método de Euler (2do Orden)    | ✔️      |
+|                             | Método de Verlet (2do Orden)     | ✔️      |
+|                             | Método de Runge-Kutta 2º Orden (2do Orden)| ✔️  |
+|                             | Método de Runge-Kutta 4º Orden (2do Orden)| ✔️  |
+|                             | Método de Euler-Cromer (Sistema de 1er Orden)| ✔️ |
+|                             | Método de Runge-Kutta 2º Orden (Sistema de 1er Orden)| ✔️ |
+|                             | Método de Runge-Kutta 4º Orden (Sistema de 1er Orden)| ✔️ |
+|                             | Método de Runge-Kutta 2º Orden (Sistema de 2do Orden)| ✔️ |
+|                            
 
-2. Compila el programa principal de tu elección utilizando `gfortran`. Por ejemplo, para compilar `main_edo.f90`, ejecuta:
+ | Método de Runge-Kutta 4º Orden (Sistema de 2do Orden)| ✔️ |
+| `main_random_methods.f90`   | Método de Monte Carlo            | ✔️      |
+|                             | Integración de Monte Carlo       | ✔️      |
+|                             | Integral Doble de Monte Carlo   | ...     |
 
-   ```bash
-   gfortran modules/solucion_edo.f90 main_edo.f90 -o main_edo.out
-   ```
+### Clave de Estado
 
-3. Ejecuta el programa compilado. Por ejemplo, para ejecutar `main_edo.out`, ejecuta:
+✔️ - Completado y disponible para su uso.
 
-   ```bash
-   ./main_edo.out
-   ```
+❌ - Aún no implementado.
 
-## Contribuciones
+... - Parcialmente implementado o en desarrollo.
 
-Las contribuciones son bienvenidas. Por favor, crea una rama de tu fork y envía una solicitud de pull (pull request) con tus cambios.
+Este repositorio está en activo desarrollo. Si un método no está actualmente disponible o en desarrollo, por favor revise más tarde para actualizaciones. Las contribuciones son siempre bienvenidas.
+
+[Se pueden encontrar métodos adicionales y su respectivo uso de ejemplo en el directorio completo](#).
+
+## Instrucciones de Compilación y Ejecución
+
+Siga estos pasos para compilar y ejecutar cualquiera de los programas principales:
+
+1.  Navegue al directorio raíz del repositorio.
+    
+2.  Compile el programa principal deseado usando `gfortran`. Por ejemplo, para compilar `main_derivative.f90`, ejecute:
+    
+```bash
+    gfortran modules/edo_solution.f90 main_edo.f90 -o main_edo.out 
+```
+3.  Ejecute el programa compilado. Por ejemplo, para ejecutar `main_derivative.out`, ejecute:
+```bash
+    ./main_edo.out 
+
+```
+## Contribuir
+
+Apreciamos y damos la bienvenida a todas las contribuciones. Amablemente cree una rama desde su fork y envíe una solicitud de extracción detallando sus cambios.
 
 ## Licencia
 
-Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para obtener más detalles.
+Este proyecto opera bajo la Licencia MIT. Consulte el archivo [LICENSE](LICENSE) para obtener detalles más completos. 
+
+Por favor note: Es esencial proporcionar una copia de la licencia o un enlace a ella. El readme menciona que el proyecto está bajo la Licencia MIT pero no proporciona una copia o un enlace. La parte faltante de la licencia hace que no esté claro qué reglas se aplican a las personas que quieren usar, cambiar o contribuir al software.
