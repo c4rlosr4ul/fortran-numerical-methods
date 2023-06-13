@@ -3,44 +3,39 @@ PROGRAM main_random_methods
     IMPLICIT NONE
     
     REAL(8) :: pi, rsl
-    INTEGER :: n
-    REAL(8) :: x0, x1, y0, y1, z0, z1 
+    INTEGER(8) :: n
+    REAL(8) :: x0, x1, y0, y1, f1max, f2max, z0, z1 
+    REAL(8), DIMENSION(2) :: x, y, z
 
     ! Calculate pi using the Monte Carlo method
-    CALL calculate_pi(100000, pi)
+    n = 100000
+    CALL calculate_pi(n, pi)
     WRITE(*, *) "Estimated value of pi: ", pi
 
     ! Monte Carlo integration
-    x0 = 0.0d0
-    x1 = 3.0d0
+    x = [0.0d0, 3.0d0]
+    f1max = f1(x(2))
     n = 100000
-    CALL monte_carlo_integration(f1, x0, x1, n, rsl)
+    CALL monte_carlo_integration(f1, x, f1max, n, rsl)
     WRITE(*, *) "Integration of f1(x) result: ", rsl
 
-    ! Double integral Monte Carlo
+    ! Double integral Monte Carlo (Calculate the volume beteewn the surface f2 and the plane xY)
     n = 100000
-    ! Define the range of the parallelepiped
-    x0 = 0.0d0
-    y0 = 0.0d0
-    z0 = 0.0d0 ! Integration above z = 0.0
-    ! Define the integration region (parallelepiped)
-    x1 = 1.0d0
-    y1 = 1.0d0
-    z1 = f2(x1, y1) ! Determine the maximum value of the function f2 within this region
-    CALL double_integral_monte_carlo(f2, x0, x1, y0, y1, n, rsl)
+    ! Define the range of the base
+    x = [0.0d0, 1.0d0]
+    y = [0.0d0, 1.0d0]
+    f2max = 1.0d0 ! Determine the maximum value of the function f2 within this region
+    CALL double_integral_monte_carlo(f2, x, y, f2max, n, rsl)
     WRITE(*, *) "Double Integration of the function f2(x,y): ", rsl
 
     ! Calculation of volumes with inequalities
     n = 1000000
     ! Define the range of the parallelepiped for the integration
-    x0 = 0.0d0
-    y0 = 0.0d0
-    z0 = 0.0d0
-    ! Define the region for the volume calculation
-    x1 = 1.0d0
-    y1 = 1.0d0
-    z1 = 1.0d0
-    CALL calculate_volumes(x0, x1, y0, y1, z0, z1, n, rsl)
+    x = [0.0d0, 1.0d0]
+    y = [0.0d0, 1.0d0]
+    z = [0.0d0, 1.0d0]
+
+    CALL calculate_volumes(x, y, z, n, rsl)
     WRITE(*, *) "Volume within the specified conditions: ", rsl
 
 CONTAINS

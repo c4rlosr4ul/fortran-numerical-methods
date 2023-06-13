@@ -1,5 +1,6 @@
 trash
 exams
+node_modules
 *.mod
 fort.100
 script.bs
