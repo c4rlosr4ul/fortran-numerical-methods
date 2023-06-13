@@ -15,34 +15,91 @@ Welcome to our repository dedicated to the implementations of various numerical 
 
 Below is a list of our main programs and the numerical methods they implement. Each table entry indicates the current implementation status. We continue to work on this repository and expect to complete unfinished methods soon.
 
-### Main Programs and Their Methods
+## Numerical Methods Status
 
-| Main Program                | Method                        | Status |
-|-----------------------------|-------------------------------|--------|
-| `main_derivative.f90`       | Numerical Derivatives         | ✔️      |
-| `main_integration.f90`      | Trapezoidal Method            | ✔️      |
-|                             | Simpson's 1/3 Method          | ✔️      |
-|                             | Simpson's 3/8 Method          | ✔️      |
-|                             | Romberg Method                | ✔️      |
-| `main_interpolation.f90`    | Lagrange Interpolation        | ✔️      |
-|                             | Newton's Forward Interpolation| ✔️      |
-|                             | Newton's Backward Interpolation| ❌    |
-| `main_ode.f90`              | Euler's Method (1st Order)    | ✔️      |
-|                             | Runge-Kutta 2nd Order (1st Order)| ✔️  |
-|                             | Runge-Kutta 4th Order (1st Order)| ✔️  |
-|                             | Euler's Method (2nd Order)    | ✔️      |
-|                             | Verlet Method (2nd Order)     | ✔️      |
-|                             | Runge-Kutta 2nd Order (2nd Order)| ✔️  |
-|                             | Runge-Kutta 4th Order (2nd Order)| ✔️  |
-|                             | Euler-Cromer (System of 1st Order)| ✔️ |
-|                             | Runge-Kutta 2nd Order (System of 1st Order)| ✔️ |
-|                             | Runge-Kutta 4th Order (System of 1st Order)| ✔️ |
-|                             | Runge-Kutta 2nd Order (System of 2nd Order)| ✔️ |
-|                             | Runge-Kutta 4th Order (System of 2nd Order)| ✔️ |
-| `main_random_methods.f90`   | Monte Carlo Method            | ✔️      |
-|                             | Monte Carlo Integration       | ✔️      |
-|                             | Double Integral Monte Carlo   | ...     |
+### Differentiation and Integration
 
+| Main Program | Method | Status |
+|---|---|---|
+| `main_derivative.f90` | Numerical Derivatives | ✔️ |
+| `main_integration.f90` | Trapezoidal Method | ✔️ |
+|  | Simpson's 1/3 Method | ✔️ |
+|  | Simpson's 3/8 Method | ✔️ |
+|  | Romberg Method | ✔️ |
+|  | Gaussian Quadrature | ❌ |
+
+### Interpolation Methods
+
+| Main Program | Method | Status |
+|---|---|---|
+| `main_interpolation.f90` | Lagrange Interpolation | ✔️ |
+|  | Newton's Forward Interpolation | ✔️ |
+|  | Newton's Backward Interpolation | ❌ |
+|  | Spline Interpolation | ❌ |
+
+### Ordinary Differential Equations
+
+| Main Program | Method | Status |
+|---|---|---|
+| `main_ode.f90` | Euler's Method (1st Order) | ✔️ |
+|  | Runge-Kutta 2nd Order (1st Order) | ✔️ |
+|  | Runge-Kutta 4th Order (1st Order) | ✔️ |
+|  | Euler's Method (2nd Order) | ✔️ |
+|  | Verlet Method (2nd Order) | ✔️ |
+|  | Runge-Kutta 2nd Order (2nd Order) | ✔️ |
+|  | Runge-Kutta 4th Order (2nd Order) | ✔️ |
+
+### Random Methods
+
+| Main Program | Method | Status |
+|---|---|---|
+| `main_random_methods.f90` | Monte Carlo Method | ✔️ |
+|  | Monte Carlo Integration | ✔️ |
+|  | Double Integral Monte Carlo | ✔️ |
+
+### Root Finding
+
+| Main Program | Method | Status |
+|---|---|---|
+| `main_root_finding.f90` | Bisection Method | ✔️ |
+|  | Secant Method | ✔️ |
+|  | Newton's Method for Root Finding | ✔️ |
+|  | Fixed-Point Iteration | ❌ |
+
+### Partial Differential Equations
+
+| Main Program | Method | Status |
+|---|---|---|
+| `main_pde.f90` | Finite Difference Method | 🔄 |
+|  | Finite Element Method | 🔄 |
+|  | Crank-Nicolson Method | 🔄 |
+
+### Optimization
+
+| Main Program | Method | Status |
+|---|---|---|
+| `main_optimization.f90` | Gradient Descent Method | 🔄 |
+|  | Newton's Method for Optimization | 🔄 |
+|  | Genetic Algorithm | 🔄 |
+|  | Simulated Annealing | ❌ |
+
+### Matrix Computations
+
+| Main Program | Method | Status |
+|---|---|---|
+| `main_matrix_computations.f90` | Matrix Inversion | 🔄 |
+|  | Matrix Determinant | 🔄 |
+|  | Eigenvalues and Eigenvectors | 🔄 |
+|  | LU Decomposition | ❌ |
+
+### Statistical Methods
+
+| Main Program | Method | Status |
+|---|---|---|
+| `main_statistical_methods.f90` | Least Squares Regression | 🔄 |
+|  | Principal Component Analysis | 🔄 |
+|  | Bootstrap Resampling | 🔄 |
+|  | Chi-Square Test | ❌ |
 ### Key to Status
 
 ✔️ - Completed and available for use.
@@ -50,6 +107,8 @@ Below is a list of our main programs and the numerical methods they implement. E
 ❌ - Not yet implemented.
 
 ... - Partially implemented or under development.
+
+🔄   - To Do
 
 This repository is under active development. If a method is not currently available or under development, please check back for updates. Contributions are always welcome.
 
