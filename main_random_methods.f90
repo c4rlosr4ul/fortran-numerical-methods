@@ -49,7 +49,7 @@ CONTAINS
     REAL(8) FUNCTION f2(x, y)
         IMPLICIT NONE
         REAL(8), INTENT(IN) :: x, y
-        f2 = SQRT(SIN(LOG(x + y + 1.0)))
+        f2 = sqrt(sin(log(x + y + 1.0)))
     END FUNCTION f2
     
 END PROGRAM main_random_methods

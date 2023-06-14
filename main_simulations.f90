@@ -1,95 +1,105 @@
-PROGRAM main_simulations
-    ! In development
-    IMPLICIT NONE
+program main_simulation
+    implicit none
     
-    REAL(8) :: tmp, o, p, d_o, d_p
-    REAL(8) :: t0, o0, p0, d_o0, d_p0
-    REAL(8) :: pi
-    INTEGER :: n  
-    REAL(8), PARAMETER :: GM = 4.0d0 * 3.1415 ** 2 ! pi ** 2 ! 3.986e14 no sense
+    real(8) :: prob, prob_rand, rand_temp
+    integer :: die, rand_die
+    integer :: n, i, j, k, seed, n_faces, n_cond
+    real(8), dimension(:), allocatable :: p, faces, cum_p
+    integer, dimension(1:6) :: results
+    real(8), dimension(:), allocatable :: new_p
+    character(len=32) :: file_name
 
-    ! Parametrization in polar coordinates
-    ! Initial conditions, all in international units    t0 = 0.0d0
-    o0 = 0.0d0
-    p0 = 384.400 ! 0.0d0
-    d_o0 = 1.0d0
-    d_p0 = 0.0d0
-    n = 1000
-    tmp = 100.0d0
+    ! Initialize the random seed
+    seed = 8
+    call random_seed(seed)
 
-    CALL se2o_m_rk_2or(d2o, d2p, t0, o0, p0, d_o0, d_p0, n, tmp, o, p, d_o, d_p) 
-    WRITE(*, *) "The angle, radial distance between the Earth and the Moon, and the angular and radial velocity of the Moon are:"
-    WRITE(*, *) tmp, o, p, d_o, d_p
+    ! Initialize the results to zero
+    results = 0
 
-CONTAINS
+    ! Number of die throws
+    n = 10000
 
-    FUNCTION d2o(t, o, p, d_o, d_p)
-        REAL(8), INTENT(IN) :: t, o, p, d_o, d_p
-        REAL(8) :: d2o
-        d2o = -2.0d0 * d_p * d_o / p
-    END FUNCTION d2o
+    ! Simulate 10000 die throws
+    do i = 1, n
+        call roll_die(die)
+        results(die) = results(die) + 1
+    end do
 
-    FUNCTION d2p(t, o, p, d_o, d_p)
-        REAL(8), INTENT(IN) :: t, o, p, d_o, d_p
-        REAL(8) :: d2p
-        d2p = -GM / p ** 2 + d_p * o ** 2
-    END FUNCTION d2p
+    ! Print the results
+    print *, "Results of rolling a die 10000 times:"
+    do i = 1, 6
+        prob = 1.0d0 * results(i) / n
+        print *, "Face ", i, ": ", results(i), "Probability", prob
+    end do
 
-    SUBROUTINE se2o_m_rk_2or(d2x1, d2x2, t0, x10, x20, dx10, dx20, n, t, x1, x2, dx1, dx2 )
-        INTERFACE
-            REAL(8) FUNCTION d2x1(t, x1, x2, dx1, dx2)
-                REAL(8), INTENT(IN) :: t, x1, x2, dx1, dx2
-            END FUNCTION d2x1
+! Conditional dice simulation
+    file_name = "data/s-dice_conditional.dat"
+    open(unit=10, file=file_name, status="unknown", action="write")
+    n = 100000     ! Number of iterations
+    n_cond = 0     ! Number of conditional dice throw simulations
+    n_faces = 6     ! Number of faces on the die
+    allocate(faces(n_faces), p(n_faces), new_p(n_faces), cum_p(n_faces))
 
-            REAL(8) FUNCTION d2x2(t, x1, x2, dx1, dx2)
-                REAL(8), INTENT(IN) :: t, x1, x2, dx1, dx2
-            END FUNCTION d2x2
-        END INTERFACE
-            
-        REAL(8), INTENT(IN) :: t0, x10, x20, dx10, dx20
-        INTEGER, INTENT(IN) :: n
-        REAL(8), INTENT(OUT) :: x1, x2, dx1, dx2
-        REAL(8) :: h, tt, t, k1x1, k1x2, l1x1, l1x2, k2x1, k2x2, l2x1, l2x2
-        INTEGER :: i
-        CHARACTER(len=40) :: filename
+    ! Set initial probabilities for each face
+    p = [0.2d0, 0.14d0, 0.22d0, 0.26d0, 0.17d0, 0.11d0]
+    cum_p = 0.0d0
+    new_p = 0.0d0
 
-        filename = "data/moon-simulation_t-o-p-do-dp.dat"
+    ! Calculate the cumulative distribution function
+    cum_p(1) = p(1)
+    do i = 2, n_faces
+        cum_p(i) = cum_p(i-1) + p(i)
+    end do
 
-        OPEN(unit=10, file=filename, status="unknown", action="write")
+    ! Initialize the number of conditional simulations
+    n_cond = 0
+    do i = 1, n
+        call random_number(rand_temp)
+        rand_die = find_face(cum_p, rand_temp)
+        new_p(rand_die) = new_p(rand_die) + 1.0d0
+        n_cond = n_cond + 1
+        write(10, *) rand_die, new_p(rand_die)
+    end do
 
-        h = ABS(t - t0) / n
-        tt = t0
-        x1 = x10
-        x2 = x20
-        dx1 = dx10
-        dx2 = dx20
-        WRITE(10, *) tt, x1, x2, dx1, dx2
+    ! Calculate new probabilities
+    new_p = new_p / real(n_cond)
 
-        DO i = 1, n
-            tt = tt + h
-            k1x1 = h * dx1
-            l1x1 = h * d2x1(tt, x1, x2, dx1, dx2) 
+    ! Print face probabilities
+    do i = 1, n_faces
+        write(*,*) "Face probability ", i, ": ", new_p(i)
+    end do
 
-            k1x2 = h * dx2
-            l1x2 = h * d2x2(tt, x1, x2, dx1, dx2) 
+    ! Print sum of probabilities
+    write(*,*) "Sum of probabilities: ", sum(new_p)
+    
+    close(10)
+    deallocate(faces, p, new_p)
 
-            k2x1 = h * (dx1 + l1x1)
-            l2x1 = h * d2x1(tt + h, x1 + k1x1, x2 + k1x2, dx1 + l1x1, dx2 + l1x2)
+contains
 
-            k2x2 = h * (dx2 + l1x2)
-            l2x2 = h * d2x2(tt + h, x1 + k1x1, x2 + k1x2, dx1 + l1x1, dx2 + l1x2)
+    ! Subroutine to simulate a dice roll
+    subroutine roll_die(result)
+        implicit none
+        real :: rand
+        integer, intent(out) :: result
 
-            x1 = x1 + (k1x1 + k2x1) / 2
-            x2 = x2 + (k1x2 + k2x2) / 2
+        call random_number(rand)
+        result = int(rand * 6) + 1
+    end subroutine roll_die
 
-            dx1 = dx1 + (l1x1 + l2x1) / 2
-            dx2 = dx2 + (l1x2 + l2x2) / 2
+    ! Function to find the face based on random number and cumulative probability
+    function find_face(cum_p, rand) result(face)
+        implicit none
+        real(8), dimension(:), intent(in) :: cum_p
+        real(8), intent(in) :: rand
+        integer :: i, face
+        
+        do i = 1, size(cum_p)
+            if (rand <= cum_p(i)) then
+                face = i
+                return
+            end if
+        end do
+    end function find_face
 
-            WRITE(10, *) tt, x1, x2, dx1, dx2
-        END DO
-
-        CLOSE(10)
-
-    END SUBROUTINE se2o_m_rk_2or
-
-END PROGRAM main_simulations
+end program main_simulation
