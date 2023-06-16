@@ -8,7 +8,7 @@
 !              and 4th order methods. The solutions are written to output
 !              files for further analysis and visualization.
 !------------------------------------------------------------------------------
-module edo_solution
+module ode_solution
     implicit none
     private
     public :: m1o_euler, m1o_runge_kutta_2or, m1o_runge_kutta_4or
@@ -537,4 +537,4 @@ contains
         close(120)
     end subroutine se2o_m_rk_4or
 
-end module edo_solution 
+end module ode_solution 
