@@ -7,7 +7,7 @@ program plot_transmittance
         filename = "data/plot_transmittance.dat"
         open(unit=10, file=filename, status="unknown", action="write")
 
-    n = 100000
+    n = 20000
     do i = 1, n
         x = x + 0.001
         r1 = 0.2; r2 = 0.5; r3 = 0.9

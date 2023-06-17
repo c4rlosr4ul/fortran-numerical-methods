@@ -6,13 +6,16 @@ program main_simulation
     integer :: die, rand_die, face
     integer :: n, i, j, k, seed, n_faces, n_cond
     real(8), dimension(:), allocatable :: p, cum_p
-    INTEGER, DIMENSION(:), ALLOCATABLE :: faces
+    integer, dimension(:), allocatable :: faces
     integer, dimension(1:6) :: results
     real(8), dimension(:), allocatable :: new_p
     character(len=32) :: file_name
     real(8) :: t0, t
     real(8), dimension(2) :: r, v, a 
     real(8), PARAMETER :: pi = 4.d0 * atan(1.d0)
+    INTEGER :: error_status
+    real(8) :: temp
+    real(8), DIMENSION(:), ALLOCATABLE :: a_ , T2_a3
 
 ! Dice simulation
     print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -141,13 +144,58 @@ deallocate(faces, p, new_p, cum_p)
     ! In cartesian coordinates 
     n = 10000
     t0 = 0.d0 !Anio 0
-    t = 2.d0
+    t = 100.d0
     r = [2.d0, 0.d0]
     v = [0.d0, pi]
 
     call se2o_m_rk_4or(a_x, a_y, t0 , r(1), r(2), v(1), v(2), n, t, r(1), r(2), v(1), v(2))
     write(*,*) "The new position of the earth is", r
     write(*,*) "The new speed of the earth is", v
+
+    call se2o_m_rk_2or(a_x, a_y, t0 , r(1), r(2), v(1), v(2), n, t, r(1), r(2), v(1), v(2))
+    write(*,*) "The new position of the earth is", r
+    write(*,*) "The new speed of the earth is", v
+
+! Calculate of the gravitational constants
+
+    file_name = "data/a-vs-T2_a3.dat"
+    open(unit=30, file=file_name, status="old", action="read", iostat=error_status) 
+    if (error_status /= 0) then
+        print *, "Error opening the file for reading."
+        stop
+    end if
+
+    n = 0
+    error_status = 0
+    do while (error_status == 0)
+        read(30, *, iostat=error_status) temp
+        if (error_status == 0) n = n + 1  
+    end do
+
+    allocate(a_(n), T2_a3(n))
+
+    rewind(30)
+
+    do i = 1, n
+        read(30, *) a_(i), T2_a3(i) 
+    end do
+
+    close(30)
+
+    open(unit=30, file=file_name, status="replace", action="write", iostat=error_status)
+    if (error_status /= 0) then
+        print *, "Error opening the file for writing."
+        stop
+    end if
+
+    do i = 1, n
+        temp = SQRT(T2_a3(i)*a_(i)**3)
+!                       a, T^3 / a^3,    T,     log(a), log(T)
+        write(30, *) a_(i), T2_a3(i), temp, log(a_(i)), log(temp)
+        print*, log(a_(i)), log(temp)
+    end do
+
+    close(30)
 
 contains
 
