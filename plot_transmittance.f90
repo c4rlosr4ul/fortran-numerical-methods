@@ -10,7 +10,7 @@ program plot_transmittance
     n = 20000
     do i = 1, n
         x = x + 0.001
-        r1 = 0.2; r2 = 0.5; r3 = 0.9
+        r1 = 0.2; r2 = 0.6; r3 = 0.9
         write(10, *)  x, T(r1,x), T(r2, x), T(r3, x) 
     end do
 

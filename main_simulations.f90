@@ -140,8 +140,8 @@ deallocate(faces, p, new_p, cum_p)
 
 ! Planet simulation moon respect earth
     print *, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
- ! Moon respect earth, used astronomic units
-    ! In cartesian coordinates 
+    ! Moon respect earth, used astronomic units
+  ! In cartesian coordinates 
     n = 10000
     t0 = 0.d0 !Anio 0
     t = 100.d0
@@ -155,6 +155,9 @@ deallocate(faces, p, new_p, cum_p)
     call se2o_m_rk_2or(a_x, a_y, t0 , r(1), r(2), v(1), v(2), n, t, r(1), r(2), v(1), v(2))
     write(*,*) "The new position of the earth is", r
     write(*,*) "The new speed of the earth is", v
+
+! Simple euler verlet simulation of the moon 
+    !CALL moon_sim_ev(n, t0, t, r, v)
 
 ! Calculate of the gravitational constants
 
@@ -193,6 +196,7 @@ deallocate(faces, p, new_p, cum_p)
 !                       a, T^3 / a^3,    T,     log(a), log(T)
         write(30, *) a_(i), T2_a3(i), temp, log(a_(i)), log(temp)
         print*, log(a_(i)), log(temp)
+! Recta interpolada 1.49928 x - 0.000213816
     end do
 
     close(30)
