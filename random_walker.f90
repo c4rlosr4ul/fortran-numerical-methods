@@ -7,11 +7,10 @@ program random_walker
         integer :: i, j, k
         character(len=64) :: filename_1, filename_2
         ! 2D
-        INTEGER, DIMENSION(:), ALLOCATABLE :: r
-        real(8), DIMENSION(:,:), ALLOCATABLE :: esp
-        real(8) :: r_old
-        integer :: y0, y1 
-
+        integer, dimension(:), allocatable :: r
+        real(8), dimension(:,:), allocatable :: esp
+        real(8) :: r_old, r_d2
+        integer :: y0, y1, d, temp
 
         filename_1 = "data/random_walker.dat"
         filename_2 = "data/random_walker_distribution.dat"
@@ -57,14 +56,18 @@ program random_walker
 ! 2 dimension random walk
 
     filename_1 = "data/random_walker_2D.dat"
-    open(unit=30, file=filename_1, status="unknown", action="write")
+    filename_2 = "data/random_walker_2D_difusion.dat"
 
-    n = 10000
+    open(unit=30, file=filename_1, status="unknown", action="write")
+    open(unit=35, file=filename_2, status="unknown", action="write")
+
+    n = 1000
     n_dim = 2
+    d = 10; temp = 0; temp = d
 
     allocate(esp(n_dim, 2), prob(n_dim), r_n(n_dim), r(n_dim))
-    esp = reshape([-40, -40, 40, 40], shape=[2,2])    ! x0 = -40,  y0 = -40; ; x1 = 40, y1 = 40
-    prob = [0.7, 0.9] ! Probability to move left: 0.5 and to move right: (1 - 07); to move to down 0.3 and to move to up (1 -0.3)
+    esp = reshape([-400, -400, 400, 400], shape=[2,2])    ! x0 = -40,  y0 = -40; ; x1 = 40, y1 = 40
+    prob = [0.5, 0.6] ! Probability to move left: 0.5 and to move right: (1 - 07); to move to down 0.3 and to move to up (1 -0.3)
 
     r = [0, 0] ! Initialize walker position
 
@@ -82,6 +85,12 @@ program random_walker
                 r(j) = r_old  ! Reject the step
             end if
         end do
+        ! Data to coeficient of difusion
+            if (i == temp) then
+                r_d2 = sqrt(real(r(1)**2 + r(2)**2))
+                write(35, *) real(i)/d, r_d2
+                temp = temp + d
+            end if
     write(30, *) i, r(1), r(2)
     end do
 
@@ -93,32 +102,31 @@ program random_walker
     filename_1 = "data/random_walker_3D.dat"
     open(unit=40, file=filename_1, status="unknown", action="write")
 
-    n = 100000
+    n = 1000
     n_dim = 3
 
     allocate(esp(n_dim, 2), prob(n_dim), r_n(n_dim), r(n_dim))
     esp = reshape([-40, -40, -40, 40, 40, 40], shape=[3,2])    ! x0 = -40; y0 = -40, z0 = -40; x1 = 40, y1=40, z1 = 40
 
-    prob = [0.5d0, 0.5d0, 0.5d0] ! Probabilities for left/right, down/up, backward/forward
+    prob = [0.5d0, 0.5d0, 0.9d0] ! Probabilities for left/right, down/up, backward/forward
     r = [0, 0, 0] ! Initialize walker position for each walk
 
-do i = 1, n ! Number of walk simulations
-    do j = 1, n_dim, 1
-        r_old = r(j)  ! Remember the old position
-        call random_number(r_num)  ! Generate a new random number for each dimension
-        if (r_num <= prob(j)) then
-            r(j) = r(j) - 1
-        else
-            r(j) = r(j) + 1
-        end if
-
-        ! Ensure r is within the limits
-        if (r(j) > esp(j, 2) .or. r(j) < esp(j, 1)) then
-            r(j) = r_old  ! Reject the step
-        end if
+    do i = 1, n ! Number of walk simulations
+        do j = 1, n_dim, 1
+            r_old = r(j)  ! Remember the old position
+            call random_number(r_num)  ! Generate a new random number for each dimension
+            if (r_num <= prob(j)) then
+                r(j) = r(j) - 1
+            else
+                r(j) = r(j) + 1
+            end if
+            ! Ensure r is within the limits
+            if (r(j) > esp(j, 2) .or. r(j) < esp(j, 1)) then
+                r(j) = r_old  ! Reject the step
+            end if
+        end do
+        write(40, *) i, r(1), r(2), r(3)
     end do
-    write(40, *) i, r(1), r(2), r(3)
-end do
 
     close(40) ! Close the file    
 
