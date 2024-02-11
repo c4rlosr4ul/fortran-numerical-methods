@@ -1,53 +1,55 @@
-MODULE moon_simulation
-    ! In development, do not use
-    IMPLICIT NONE
-    PRIVATE
-    PUBLIC :: moon_sim_ev
 
-CONTAINS 
+module moon_simulation
+    use, intrinsic :: iso_fortran_env, only: dp => real64
+    implicit none
+    private
+    public :: moon_sim_ev
 
-! Simulates the motion of the Moon in the x-y plane
-SUBROUTINE moon_sim_ev(n, t0, t, r, v)
-    USE, INTRINSIC :: iso_fortran_env, ONLY: dp => real64
-    IMPLICIT NONE
-    INTEGER, INTENT(IN) :: n
-    REAL(dp), INTENT(IN) :: t0, t
-    REAL(dp), DIMENSION(:), INTENT(IN) :: r, v
-    REAL(dp), DIMENSION(:), ALLOCATABLE, :: tl, xl, yl
-    REAL(dp) :: GM, pos(2), vel(2), acel(2), acelt, r_temp, dt, time
-    INTEGER :: i, n_steps
-    character(len=32) :: filename
+contains
 
+    ! Simulates the motion of the Moon in the x-y plane
+    subroutine moon_sim_ev(n, t0, t, r, v)
+        implicit none
+        integer, intent(in) :: n
+        real(dp), intent(in) :: t0, t
+        real(dp), dimension(:), intent(in) :: r, v
+        real(dp), dimension(:), allocatable :: tl, xl, yl
+        real(dp) :: GM, pos(2), vel(2), accel(2), dt, time
+        integer :: i, n_steps, unit
+        character(len=32) :: filename
+
+        ! Constants
+        real(dp), parameter :: pi = 3.14159265358979323846_dp
+        GM = 4902.8_dp  ! Assuming units are km^3/s^2, adjust as necessary
+
+        ! File setup
         filename = "data/moon_sim_ev.dat"
-        open(unit=10, file=filename, status="unknown", action="write")
+        open(newunit=unit, file=filename, status="replace", action="write")
 
-    ! Determine constants
-    GM = 4.0_dp * pi
-    
-    ! Initial conditions
-    pos = r
-    vel = v
-    acel = [0.0_dp, 0.0_dp]
-    time = t0
-    dt = t / REAL(n)
-    n_steps = n
-    
-    ALLOCATE(tl(n_steps), xl(n_steps), yl(n_steps))
+        ! Initial conditions
+        pos = r
+        vel = v
+        time = t0
+        dt = t / real(n, dp)
+        n_steps = n
 
-    DO i = 1, n_steps
-        r_temp = SQRT(SUM(pos**2))
-        acelt = -GM * pos(1) / r_temp**3
-        pos(1) = pos(1) + vel(1) * dt + 0.5_dp * acelt * dt * dt
-        acel(1) = -GM * pos(1) / r_temp**3
-        vel(1) = vel(1) + dt * (acel(1) + acelt) * 0.5_dp
+        allocate(tl(n_steps), xl(n_steps), yl(n_steps))
 
-        tl(i) = time
-        xl(i) = pos(1)
-        yl(i) = pos(2)
-        WRITE(10, *) tl(i), xl(i), yl(i)
-        time = time + dt
+        do i = 1, n_steps
+            accel = -GM * pos / sum(pos**2)**1.5_dp
+            pos = pos + vel * dt + 0.5_dp * accel * dt**2
+            vel = vel + accel * dt
 
-    END DO
-END SUBROUTINE
+            tl(i) = time
+            xl(i) = pos(1)
+            yl(i) = pos(2)
+            write(unit, *) tl(i), xl(i), yl(i)
 
-END MODULE moon_simulation
+            time = time + dt
+        end do
+
+        close(unit)
+    end subroutine moon_sim_ev
+
+end module moon_simulation
+
